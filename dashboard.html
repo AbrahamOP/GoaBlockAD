@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoaBlockAD — Configuration</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="icon" type="image/png" href="images/icon48.png">
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Header -->
+    <header class="dash-header">
+      <div class="header-brand">
+        <img src="images/icon48.png" alt="GoaBlockAD" class="header-logo">
+        <h1>GoaBlockAD</h1>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" data-tab="settings">Paramètres</button>
+        <button class="tab" data-tab="filter-lists">Listes de filtres</button>
+        <button class="tab" data-tab="custom-filters">Filtres personnalisés</button>
+        <button class="tab" data-tab="about">À propos</button>
+      </nav>
+    </header>
+
+    <!-- Tab: Paramètres -->
+    <section id="tab-settings" class="tab-content active">
+      <div class="section-card">
+        <h2>Protection</h2>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Blocage réseau</span>
+            <span class="setting-desc">Bloque les requêtes publicitaires au niveau réseau via les règles
+              declarativeNetRequest.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="setting-enabled" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Nettoyage cosmétique</span>
+            <span class="setting-desc">Masque les éléments visuels publicitaires restants (bannières, encarts,
+              iframes).</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="setting-cosmetic" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>Statistiques</h2>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Publicités bloquées</span>
+            <span class="setting-desc">Nombre total de publicités bloquées depuis l'installation.</span>
+          </div>
+          <span class="stat-badge" id="stats-count">0</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Réinitialiser le compteur</span>
+            <span class="setting-desc">Remet le compteur de publicités bloquées à zéro.</span>
+          </div>
+          <button class="btn btn-danger" id="btn-reset-count">Réinitialiser</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Listes de filtres -->
+    <section id="tab-filter-lists" class="tab-content">
+      <div class="filter-stats-bar">
+        <span id="filter-rule-count">0 liste(s) active(s)</span>
+        <input type="text" id="filter-search" class="filter-search" placeholder="Trouver des listes...">
+      </div>
+
+      <!-- Par défaut -->
+      <div class="filter-category">
+        <div class="category-header" data-category="default">
+          <span class="category-chevron">▾</span>
+          <strong>Par défaut</strong>
+          <span class="category-count" data-count-for="default"></span>
+        </div>
+        <div class="category-body" id="cat-default">
+          <label class="filter-item"><input type="checkbox" data-filter="easylist" data-cat="default" checked>
+            EasyList</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easyprivacy" data-cat="default" checked>
+            EasyPrivacy</label>
+          <label class="filter-item"><input type="checkbox" data-filter="peter-lowe" data-cat="default" checked> Peter
+            Lowe – Ads, trackers, and more</label>
+          <label class="filter-item"><input type="checkbox" data-filter="ublock-filters" data-cat="default" checked>
+            uBlock filters – Ads, trackers, and more</label>
+        </div>
+      </div>
+
+      <!-- Publicités -->
+      <div class="filter-category">
+        <div class="category-header" data-category="ads">
+          <span class="category-chevron">▾</span>
+          <strong>Publicités</strong>
+          <span class="category-count" data-count-for="ads"></span>
+        </div>
+        <div class="category-body" id="cat-ads">
+          <label class="filter-item"><input type="checkbox" data-filter="adguard-mobile" data-cat="ads"> AdGuard Mobile
+            Ads filter</label>
+        </div>
+      </div>
+
+      <!-- Confidentialité -->
+      <div class="filter-category">
+        <div class="category-header" data-category="privacy">
+          <span class="category-chevron">▾</span>
+          <strong>Confidentialité</strong>
+          <span class="category-count" data-count-for="privacy"></span>
+        </div>
+        <div class="category-body" id="cat-privacy">
+          <label class="filter-item"><input type="checkbox" data-filter="adguard-tracking" data-cat="privacy">
+            AdGuard/uBO – URL Tracking Protection</label>
+          <label class="filter-item"><input type="checkbox" data-filter="block-outsider-lan" data-cat="privacy"> Block
+            Outsider Intrusion into LAN</label>
+        </div>
+      </div>
+
+      <!-- Sécurité -->
+      <div class="filter-category">
+        <div class="category-header" data-category="security">
+          <span class="category-chevron">▾</span>
+          <strong>Protection contre les logiciels malveillants, sécurité</strong>
+          <span class="category-count" data-count-for="security"></span>
+        </div>
+        <div class="category-body" id="cat-security">
+          <label class="filter-item"><input type="checkbox" data-filter="ublock-badware" data-cat="security" checked>
+            uBlock filters – Badware risks</label>
+          <label class="filter-item"><input type="checkbox" data-filter="malicious-url-blocklist" data-cat="security"
+              checked> Malicious URL Blocklist</label>
+        </div>
+      </div>
+
+      <!-- Nuisances -->
+      <div class="filter-category">
+        <div class="category-header" data-category="annoyances">
+          <span class="category-chevron">▾</span>
+          <strong>Nuisances</strong>
+          <span class="category-count" data-count-for="annoyances"></span>
+        </div>
+        <div class="category-body" id="cat-annoyances">
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-ai-widgets" data-cat="annoyances">
+            EasyList – AI Widgets</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-cookie-notices" data-cat="annoyances">
+            EasyList/uBO – Cookie Notices</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-notifications" data-cat="annoyances">
+            EasyList – Notifications</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-other-annoyances"
+              data-cat="annoyances"> EasyList – Other Annoyances</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-overlay-notices"
+              data-cat="annoyances"> EasyList/uBO – Overlay Notices</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-social-widgets" data-cat="annoyances">
+            EasyList – Social Widgets</label>
+          <label class="filter-item"><input type="checkbox" data-filter="easylist-chat-widgets" data-cat="annoyances">
+            EasyList – Chat Widgets</label>
+        </div>
+      </div>
+
+      <!-- Divers -->
+      <div class="filter-category">
+        <div class="category-header" data-category="misc">
+          <span class="category-chevron">▾</span>
+          <strong>Divers</strong>
+          <span class="category-count" data-count-for="misc"></span>
+        </div>
+        <div class="category-body" id="cat-misc">
+          <label class="filter-item"><input type="checkbox" data-filter="dan-pollock-hosts" data-cat="misc"> Dan
+            Pollock's hosts file</label>
+          <label class="filter-item"><input type="checkbox" data-filter="steven-black-hosts" data-cat="misc"> Steven
+            Black's Unified Hosts (adware + malware)</label>
+          <label class="filter-item"><input type="checkbox" data-filter="ublock-experimental" data-cat="misc"> uBlock
+            filters – Experimental</label>
+          <label class="filter-item"><input type="checkbox" data-filter="ubo-lite-test" data-cat="misc"> uBO Lite Test
+            Filters</label>
+        </div>
+      </div>
+
+      <!-- Régions, langues -->
+      <div class="filter-category">
+        <div class="category-header" data-category="regions">
+          <span class="category-chevron">▾</span>
+          <strong>Régions, langues</strong>
+          <span class="category-count" data-count-for="regions"></span>
+        </div>
+        <div class="category-body" id="cat-regions">
+          <label class="filter-item"><input type="checkbox" data-filter="lang-fr" data-cat="regions" checked> 🇫🇷 fra:
+            AdGuard Français</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-de" data-cat="regions"> 🇩🇪 deu: EasyList
+            Germany</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-es" data-cat="regions"> 🇪🇸 spa: EasyList
+            Spanish</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-it" data-cat="regions"> 🇮🇹 ita: EasyList
+            Italy</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-nl" data-cat="regions"> 🇳🇱 nld: EasyList
+            Dutch</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-pt" data-cat="regions"> 🇧🇷 por: EasyList
+            Portuguese</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-pl" data-cat="regions"> 🇵🇱 pol: Polskie
+            Filtry</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-ru" data-cat="regions"> 🇷🇺 rus: AdGuard
+            Russian</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-zh" data-cat="regions"> 🇨🇳 zho: AdGuard
+            Chinese</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-ja" data-cat="regions"> 🇯🇵 jpn: AdGuard
+            Japanese</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-ko" data-cat="regions"> 🇰🇷 kor:
+            List-KR</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-ar" data-cat="regions"> 🇸🇦 ara: Liste
+            AR</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-tr" data-cat="regions"> 🇹🇷 tur: AdGuard
+            Turkish</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-vi" data-cat="regions"> 🇻🇳 vie: ABPVN
+            List</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-id" data-cat="regions"> 🇮🇩 ind: ABP
+            Indonesia</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-th" data-cat="regions"> 🇹🇭 tha: Thai Ads
+            Filters</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-fi" data-cat="regions"> 🇫🇮 fin: Adblock
+            List for Finland</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-hu" data-cat="regions"> 🇭🇺 hun:
+            huFilterList</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-cs" data-cat="regions"> 🇨🇿 ces: EasyList
+            Czech/Slovak</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-ro" data-cat="regions"> 🇷🇴 ron: Romanian
+            Ad (ROLIST2)</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-bg" data-cat="regions"> 🇧🇬 bul:
+            Bulgarian Adblock list</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-el" data-cat="regions"> 🇬🇷 ell: Greek
+            AdBlock Filter</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-he" data-cat="regions"> 🇮🇱 heb: EasyList
+            Hebrew</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-uk" data-cat="regions"> 🇺🇦 ukr:
+            Ukrainian Adblock Filters</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-sv" data-cat="regions"> 🇸🇪 swe:
+            Frellwit's Swedish Filter</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-no" data-cat="regions"> 🇳🇴 nor:
+            Dandelion Sprout's Nordic Filters</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-da" data-cat="regions"> 🇩🇰 dan:
+            Dandelion Sprout's Nordic Filters</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-is" data-cat="regions"> 🇮🇸 isl:
+            Icelandic ABP List</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-lv" data-cat="regions"> 🇱🇻 lav: Latvian
+            Adblock List</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-lt" data-cat="regions"> 🇱🇹 lit: EasyList
+            Lithuania</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-et" data-cat="regions"> 🇪🇪 est: Estonian
+            Adblock List</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-fa" data-cat="regions"> 🇮🇷 per: Persian
+            Blocker</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-hi" data-cat="regions"> 🇮🇳 hin:
+            IndianList</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-bn" data-cat="regions"> 🇧🇩 ben:
+            Bangladeshi Adblock List</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-ms" data-cat="regions"> 🇲🇾 msa: ABP
+            Malaysian</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-sk" data-cat="regions"> 🇸🇰 slk: EasyList
+            Czech/Slovak</label>
+          <label class="filter-item"><input type="checkbox" data-filter="lang-sr" data-cat="regions"> 🇷🇸 srp: Serbian
+            Adblock List</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Filtres personnalisés -->
+    <section id="tab-custom-filters" class="tab-content">
+      <div class="section-card">
+        <h2>Domaines personnalisés à bloquer</h2>
+        <p class="section-desc">Ajoutez un domaine par ligne. Ces règles seront appliquées en plus des listes de filtres
+          activées.</p>
+        <textarea id="custom-filters-textarea" class="custom-textarea"
+          placeholder="exemple.com&#10;pub.example.org&#10;tracking.site.net" rows="14"></textarea>
+        <div class="custom-actions">
+          <span class="custom-count" id="custom-count">0 règle(s) personnalisée(s)</span>
+          <div class="custom-buttons">
+            <button class="btn btn-secondary" id="btn-custom-cancel">Annuler</button>
+            <button class="btn btn-primary" id="btn-custom-save">Appliquer les modifications</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: À propos -->
+    <section id="tab-about" class="tab-content">
+      <div class="section-card about-card">
+        <img src="images/icon128.png" alt="GoaBlockAD" class="about-logo">
+        <h2>GoaBlockAD</h2>
+        <p class="about-version">Version 1.0</p>
+        <p class="about-desc">Une extension simple et efficace pour bloquer les publicités et protéger votre vie privée
+          en ligne.</p>
+        <div class="about-divider"></div>
+        <div class="about-links">
+          <a href="https://github.com/AbrahamOP/GoaBlockAD" target="_blank" class="about-link">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            Code source sur GitHub
+          </a>
+        </div>
+        <div class="about-footer">
+          <p>Profitez du calme du Goa. 🌴</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+
+</html>

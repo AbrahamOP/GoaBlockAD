@@ -55,4 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             statusState.style.color = '#ff5252';
         }
     }
+
+    // Open Dashboard
+    const btnDashboard = document.getElementById('btn-open-dashboard');
+    if (btnDashboard) {
+        btnDashboard.addEventListener('click', () => {
+            chrome.runtime.openOptionsPage();
+        });
+    }
 });

@@ -42,6 +42,7 @@ h1 {
   background: linear-gradient(90deg, #4dd0e1, #00b0ff);
   /* Softer cyan */
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -174,7 +175,41 @@ input:checked+.slider:before {
 
 footer {
   text-align: center;
-  font-size: 0.75rem;
-  opacity: 0.4;
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #333436;
+  border: 1px solid #444;
+  color: #bdbdbd;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 7px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dashboard:hover {
+  background: #3d3e40;
+  color: #4dd0e1;
+  border-color: #4dd0e1;
+}
+
+.btn-dashboard svg {
+  flex-shrink: 0;
+}
+
+.footer-tagline {
+  font-size: 0.72rem;
+  opacity: 0.35;
+  margin: 0;
 }

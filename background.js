@@ -1,12 +1,41 @@
 // GoaBlockAD - Background Service Worker
 
-// Initialize counter on install
+// Initialize defaults on install
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.local.get(['count'], (result) => {
-        if (result.count === undefined) {
-            chrome.storage.local.set({ count: 0 });
+    chrome.storage.local.get(['count', 'filterStates', 'customFilters'], (result) => {
+        const defaults = {};
+        if (result.count === undefined) defaults.count = 0;
+        if (result.filterStates === undefined) defaults.filterStates = {};
+        if (result.customFilters === undefined) defaults.customFilters = '';
+        if (Object.keys(defaults).length > 0) {
+            chrome.storage.local.set(defaults);
         }
     });
+});
+
+// Rebuild dynamic rules when custom filters change
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
+    if (namespace === 'local' && changes.customFilters) {
+        const raw = changes.customFilters.newValue || '';
+        const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('#'));
+        const dynamicRules = lines.map((domain, i) => ({
+            id: 10000 + i,
+            priority: 1,
+            action: { type: 'block' },
+            condition: {
+                urlFilter: domain,
+                resourceTypes: ['script', 'image', 'xmlhttprequest', 'sub_frame', 'stylesheet', 'font', 'media', 'other']
+            }
+        }));
+
+        const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
+        const removeIds = existingRules.map(r => r.id);
+
+        await chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: removeIds,
+            addRules: dynamicRules
+        });
+    }
 });
 
 // Listen for rule matches (network blocking)
