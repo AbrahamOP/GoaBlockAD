@@ -176,35 +176,29 @@ input:checked+.slider:before {
 footer {
   text-align: center;
   margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
 }
 
-.btn-dashboard {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #333436;
-  border: 1px solid #444;
-  color: #bdbdbd;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 500;
-  padding: 7px 16px;
-  border-radius: 20px;
+.btn-settings {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #78909c;
   cursor: pointer;
-  transition: all 0.2s;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
 }
 
-.btn-dashboard:hover {
-  background: #3d3e40;
+.btn-settings:hover {
   color: #4dd0e1;
-  border-color: #4dd0e1;
+  background: rgba(77, 208, 225, 0.1);
+  transform: rotate(45deg);
 }
 
-.btn-dashboard svg {
+.btn-settings svg {
   flex-shrink: 0;
 }
 
