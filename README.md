@@ -1,6 +1,6 @@
 # GoaBlockAD 🛡️🌴
 
-**GoaBlockAD** est une extension Chrome performante et élégante pour bloquer les publicités, inspirée par le calme et la sérénité de Goa.
+**GoaBlockAD** est une extension Chrome performante et élégante pour bloquer les publicités.
 Elle combine un blocage réseau efficace (Manifest V3) et un nettoyage visuel pour une expérience de navigation fluide.
 
 ![GoaBlockAD Icon](images/icon128.png)
