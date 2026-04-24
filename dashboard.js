@@ -31,15 +31,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     settingCosmetic.checked = cosmetic;
     statsCount.textContent = count.toLocaleString('fr-FR');
 
-    // Toggle network protection
+    // Toggle network protection — background.js handles the ruleset toggle via storage.onChanged
     settingEnabled.addEventListener('change', async (e) => {
         const isEnabled = e.target.checked;
         await chrome.storage.local.set({ enabled: isEnabled });
-        if (isEnabled) {
-            await chrome.declarativeNetRequest.updateEnabledRulesets({ enableRulesetIds: ['ruleset_1'] });
-        } else {
-            await chrome.declarativeNetRequest.updateEnabledRulesets({ disableRulesetIds: ['ruleset_1'] });
-        }
         showToast(isEnabled ? 'Blocage réseau activé' : 'Blocage réseau désactivé');
     });
 
@@ -162,6 +157,89 @@ document.addEventListener('DOMContentLoaded', async () => {
         customTextarea.value = saved;
         updateCustomCount();
         showToast('Modifications annulées');
+    });
+
+    // ──────────────────────────────────────────────
+    // Sites & Stats Tab
+    // ──────────────────────────────────────────────
+    const whitelistEl = document.getElementById('whitelist-list');
+    const topDomainsEl = document.getElementById('top-domains');
+    const domainStatsCount = document.getElementById('domain-stats-count');
+    const btnResetDomainStats = document.getElementById('btn-reset-domain-stats');
+
+    async function renderWhitelist() {
+        const { whitelist = [] } = await chrome.storage.local.get('whitelist');
+        whitelistEl.innerHTML = '';
+        if (whitelist.length === 0) {
+            const li = document.createElement('li');
+            li.className = 'whitelist-empty';
+            li.textContent = 'Aucun site autorisé.';
+            whitelistEl.appendChild(li);
+            return;
+        }
+        whitelist.forEach(domain => {
+            const li = document.createElement('li');
+            const label = document.createElement('span');
+            label.textContent = domain;
+            const btn = document.createElement('button');
+            btn.className = 'btn-remove';
+            btn.textContent = 'Retirer';
+            btn.addEventListener('click', async () => {
+                await chrome.runtime.sendMessage({ type: 'toggleWhitelist', domain });
+                showToast(`${domain} retiré de la whitelist`);
+            });
+            li.append(label, btn);
+            whitelistEl.appendChild(li);
+        });
+    }
+
+    async function renderTopDomains() {
+        const { domainStats = {} } = await chrome.storage.local.get('domainStats');
+        const entries = Object.entries(domainStats).sort((a, b) => b[1] - a[1]).slice(0, 15);
+        topDomainsEl.innerHTML = '';
+        domainStatsCount.textContent = `${Object.keys(domainStats).length} domaine(s)`;
+        if (entries.length === 0) {
+            const li = document.createElement('li');
+            li.className = 'top-domains-empty';
+            li.textContent = 'Pas encore de données.';
+            topDomainsEl.appendChild(li);
+            return;
+        }
+        const max = entries[0][1];
+        entries.forEach(([domain, n]) => {
+            const li = document.createElement('li');
+            const name = document.createElement('span');
+            name.textContent = domain;
+            name.style.minWidth = '0';
+            name.style.overflow = 'hidden';
+            name.style.textOverflow = 'ellipsis';
+            name.style.whiteSpace = 'nowrap';
+            name.style.flex = '0 0 40%';
+            const bar = document.createElement('div');
+            bar.className = 'dom-bar';
+            const fill = document.createElement('span');
+            fill.style.width = Math.round((n / max) * 100) + '%';
+            bar.appendChild(fill);
+            const count = document.createElement('span');
+            count.className = 'dom-count';
+            count.textContent = n.toLocaleString('fr-FR');
+            li.append(name, bar, count);
+            topDomainsEl.appendChild(li);
+        });
+    }
+
+    renderWhitelist();
+    renderTopDomains();
+
+    btnResetDomainStats.addEventListener('click', async () => {
+        await chrome.runtime.sendMessage({ type: 'resetDomainStats' });
+        showToast('Stats par domaine réinitialisées');
+    });
+
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+        if (namespace !== 'local') return;
+        if (changes.whitelist) renderWhitelist();
+        if (changes.domainStats) renderTopDomains();
     });
 
     // ──────────────────────────────────────────────

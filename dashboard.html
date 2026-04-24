@@ -19,6 +19,7 @@
       </div>
       <nav class="tabs">
         <button class="tab active" data-tab="settings">Paramètres</button>
+        <button class="tab" data-tab="sites">Sites & Stats</button>
         <button class="tab" data-tab="filter-lists">Listes de filtres</button>
         <button class="tab" data-tab="custom-filters">Filtres personnalisés</button>
         <button class="tab" data-tab="about">À propos</button>
@@ -68,6 +69,30 @@
             <span class="setting-desc">Remet le compteur de publicités bloquées à zéro.</span>
           </div>
           <button class="btn btn-danger" id="btn-reset-count">Réinitialiser</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Sites & Stats -->
+    <section id="tab-sites" class="tab-content">
+      <div class="section-card">
+        <h2>Sites autorisés</h2>
+        <p class="section-desc">Les domaines listés ici voient leur blocage désactivé (whitelist). Utilise le bouton
+          « Autoriser ici » depuis le popup pour en ajouter.</p>
+        <ul class="whitelist" id="whitelist-list">
+          <li class="whitelist-empty">Aucun site autorisé.</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>Top domaines bloqués</h2>
+        <p class="section-desc">Classement des domaines les plus souvent bloqués depuis l'installation.</p>
+        <ol class="top-domains" id="top-domains">
+          <li class="top-domains-empty">Pas encore de données.</li>
+        </ol>
+        <div class="custom-actions">
+          <span class="custom-count" id="domain-stats-count">0 domaine(s)</span>
+          <button class="btn btn-danger" id="btn-reset-domain-stats">Réinitialiser les stats</button>
         </div>
       </div>
     </section>
