@@ -436,12 +436,108 @@ main {
   flex: 1;
 }
 
+.site-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .site-label {
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--on-surface-variant);
+}
+
+/* ─────────── MD3 help button + tooltip ─────────── */
+.help-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--shape-full);
+  background: var(--surface-container-highest);
+  color: var(--on-surface-variant);
+  border: none;
+  padding: 0;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background-color var(--dur-short) var(--motion-standard),
+              color var(--dur-short) var(--motion-standard);
+  flex-shrink: 0;
+}
+
+.help-btn svg {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.help-btn:hover,
+.help-btn:focus-visible {
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  outline: none;
+}
+
+.help-tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: -4px;
+  width: 240px;
+  max-width: calc(100vw - 40px);
+  background: var(--surface-container-highest);
+  color: var(--on-surface);
+  border: 1px solid var(--outline-variant);
+  padding: 10px 14px;
+  border-radius: var(--shape-sm);
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: left;
+  box-shadow: var(--elev-3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity var(--dur-short) var(--motion-standard),
+              transform var(--dur-short) var(--motion-emph),
+              visibility 0ms linear var(--dur-short);
+  z-index: 30;
+  white-space: normal;
+  cursor: default;
+}
+
+.help-tip strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.help-tip em {
+  font-style: normal;
+  color: var(--primary);
+}
+
+.help-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  background: var(--surface-container-highest);
+  border-right: 1px solid var(--outline-variant);
+  border-bottom: 1px solid var(--outline-variant);
+  transform: translateY(-6px) rotate(45deg);
+}
+
+.help-btn:hover .help-tip,
+.help-btn:focus-visible .help-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 150ms, 150ms, 0ms;
 }
 
 .site-domain {

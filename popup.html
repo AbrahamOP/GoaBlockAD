@@ -58,7 +58,15 @@
 
       <section class="surface site-card">
         <div class="site-info">
-          <span class="site-label">Site actuel</span>
+          <div class="site-label-row">
+            <span class="site-label">Site actuel</span>
+            <button class="help-btn" type="button" aria-label="Aide : à quoi sert Autoriser ici ?" tabindex="0">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+              <span class="help-tip" role="tooltip">
+                <strong>Autoriser ici</strong> ajoute le site à la <em>whitelist</em> : aucun blocage publicitaire ne s'appliquera sur ce domaine. Utile pour soutenir un site ou débloquer un contenu cassé.
+              </span>
+            </button>
+          </div>
           <span class="site-domain" id="current-domain">—</span>
         </div>
         <button class="md-chip" id="btn-whitelist">Autoriser ici</button>
