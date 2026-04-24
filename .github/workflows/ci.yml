@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('rules.json','utf8'))"
+
+      - name: Check JS syntax
+        run: |
+          for f in background.js content.js popup.js dashboard.js; do
+            node --check "$f"
+          done
+
+      - name: Verify manifest references existing files
+        run: |
+          node -e "
+            const fs = require('fs');
+            const m = JSON.parse(fs.readFileSync('manifest.json','utf8'));
+            const missing = [];
+            const check = (p) => { if (p && !fs.existsSync(p)) missing.push(p); };
+            check(m.background?.service_worker);
+            check(m.options_page);
+            check(m.action?.default_popup);
+            for (const cs of m.content_scripts || []) {
+              (cs.js || []).forEach(check);
+              (cs.css || []).forEach(check);
+            }
+            for (const r of m.declarative_net_request?.rule_resources || []) check(r.path);
+            for (const size of Object.keys(m.icons || {})) check(m.icons[size]);
+            if (missing.length) { console.error('Missing files:', missing); process.exit(1); }
+            console.log('All manifest references resolve.');
+          "
