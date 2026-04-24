@@ -3,12 +3,12 @@
    ───────────────────────────────────────────── */
 
 :root {
-  /* Shape tokens (MD3) */
-  --shape-xs: 4px;
-  --shape-sm: 8px;
-  --shape-md: 12px;
-  --shape-lg: 16px;
-  --shape-xl: 28px;
+  /* Shape tokens (MD3, boosted for expressive feel) */
+  --shape-xs: 8px;
+  --shape-sm: 12px;
+  --shape-md: 16px;
+  --shape-lg: 24px;
+  --shape-xl: 32px;
   --shape-full: 9999px;
 
   /* Spacing (4dp grid) */
@@ -25,6 +25,11 @@
   --motion-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --dur-short: 150ms;
   --dur-medium: 250ms;
+
+  /* Elevation (MD3 — subtle shadow + surface tint) */
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --elev-2: 0 1px 2px rgba(0, 0, 0, 0.30), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --elev-3: 0 1px 3px rgba(0, 0, 0, 0.30), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* Dark scheme (default) */
@@ -32,32 +37,32 @@
   color-scheme: dark;
   --primary: #4fd8eb;
   --on-primary: #00363f;
-  --primary-container: #004f5a;
-  --on-primary-container: #a1efff;
+  --primary-container: #005965;
+  --on-primary-container: #9fefff;
   --secondary: #b1cbd0;
-  --on-secondary: #1b3439;
+  --on-secondary: #1c3438;
+  --secondary-container: #334a4f;
+  --on-secondary-container: #cde7ec;
   --tertiary: #bdc5ff;
   --error: #ffb4ab;
   --on-error: #690005;
   --warning: #ffb86b;
+  --on-warning: #452b00;
 
-  --surface: #0e1416;
-  --surface-dim: #0e1416;
-  --surface-bright: #343a3c;
-  --surface-container-lowest: #090f11;
-  --surface-container-low: #171d1f;
-  --surface-container: #1b2123;
-  --surface-container-high: #252b2d;
-  --surface-container-highest: #303638;
+  --surface: #101417;
+  --surface-dim: #101417;
+  --surface-bright: #363a3d;
+  --surface-container-lowest: #0b0f11;
+  --surface-container-low: #191d20;
+  --surface-container: #1d2124;
+  --surface-container-high: #282b2f;
+  --surface-container-highest: #32363a;
 
-  --on-surface: #e0e3e4;
-  --on-surface-variant: #bfc8cc;
-  --outline: #899296;
-  --outline-variant: #3f4849;
+  --on-surface: #e1e3e4;
+  --on-surface-variant: #c1c7cb;
+  --outline: #8b9296;
+  --outline-variant: #414749;
 
-  --scrim: rgba(0, 0, 0, 0.5);
-
-  /* State layer opacities */
   --state-hover: 0.08;
   --state-focus: 0.12;
   --state-pressed: 0.12;
@@ -67,16 +72,19 @@
 @media (prefers-color-scheme: light) {
   :root {
     color-scheme: light;
-    --primary: #006876;
+    --primary: #00677a;
     --on-primary: #ffffff;
-    --primary-container: #a1efff;
-    --on-primary-container: #001f25;
+    --primary-container: #aeecff;
+    --on-primary-container: #001f26;
     --secondary: #4a6367;
     --on-secondary: #ffffff;
+    --secondary-container: #cde7ec;
+    --on-secondary-container: #051f23;
     --tertiary: #535d92;
     --error: #ba1a1a;
     --on-error: #ffffff;
-    --warning: #905400;
+    --warning: #9a5400;
+    --on-warning: #ffffff;
 
     --surface: #f5fafc;
     --surface-dim: #d5dbdd;
@@ -87,28 +95,27 @@
     --surface-container-high: #e3e9eb;
     --surface-container-highest: #dde3e5;
 
-    --on-surface: #171d1f;
-    --on-surface-variant: #40484a;
-    --outline: #70797b;
-    --outline-variant: #bfc8cc;
+    --on-surface: #171c1f;
+    --on-surface-variant: #40484b;
+    --outline: #70797c;
+    --outline-variant: #c0c8cb;
   }
 }
 
-/* Typography scale (MD3) */
-body {
-  font-family: 'Inter', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ─────────── Base ─────────── */
+* {
+  box-sizing: border-box;
 }
 
-/* Layout */
 body {
-  width: 340px;
-  height: 580px;
+  width: 360px;
+  min-height: 600px;
   margin: 0;
   padding: 0;
+  font-family: 'Inter', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
   background-color: var(--surface);
   color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
   overflow: hidden;
 }
 
@@ -116,7 +123,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-sizing: border-box;
+  min-height: 600px;
 }
 
 /* ─────────── App bar ─────────── */
@@ -126,27 +133,30 @@ body {
   gap: var(--sp-3);
   padding: var(--sp-4) var(--sp-5);
   background: var(--surface);
+  position: relative;
+  z-index: 5;
 }
 
 .app-logo {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--shape-full);
   object-fit: cover;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .app-title {
   flex: 1;
   margin: 0;
-  font-size: 1.125rem;   /* title-large 22 → scaled */
-  font-weight: 600;
-  letter-spacing: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   color: var(--on-surface);
 }
 
 .icon-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--shape-full);
   background: transparent;
   border: none;
@@ -156,23 +166,26 @@ body {
   align-items: center;
   justify-content: center;
   transition: background-color var(--dur-short) var(--motion-standard),
-              color var(--dur-short) var(--motion-standard);
-  position: relative;
+              color var(--dur-short) var(--motion-standard),
+              transform var(--dur-medium) var(--motion-emph);
   padding: 0;
 }
 
 .icon-btn svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
+  display: block;
+  pointer-events: none;
 }
 
 .icon-btn:hover {
-  background-color: color-mix(in srgb, var(--on-surface) calc(var(--state-hover) * 100%), transparent);
-  color: var(--on-surface);
+  background-color: color-mix(in srgb, var(--on-surface) 10%, transparent);
+  color: var(--primary);
+  transform: rotate(30deg);
 }
 
 .icon-btn:active {
-  background-color: color-mix(in srgb, var(--on-surface) calc(var(--state-pressed) * 100%), transparent);
+  background-color: color-mix(in srgb, var(--on-surface) 15%, transparent);
 }
 
 /* ─────────── Main ─────────── */
@@ -187,30 +200,50 @@ main {
 
 /* ─────────── Hero card ─────────── */
 .hero-card {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--primary-container) 100%, transparent) 0%,
-    color-mix(in srgb, var(--primary-container) 60%, var(--surface-container)) 100%);
+  background: radial-gradient(140% 120% at 0% 0%,
+    color-mix(in srgb, var(--primary) 40%, var(--primary-container)) 0%,
+    var(--primary-container) 55%,
+    color-mix(in srgb, var(--primary-container) 70%, var(--surface)) 100%);
   color: var(--on-primary-container);
   border-radius: var(--shape-xl);
-  padding: var(--sp-5) var(--sp-5);
+  padding: var(--sp-5) var(--sp-6);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-4);
-  overflow: hidden;
+  min-height: 112px;
+  box-shadow: var(--elev-2);
   position: relative;
-  transition: background var(--dur-medium) var(--motion-standard);
+  overflow: hidden;
+  transition: background var(--dur-medium) var(--motion-standard),
+              color var(--dur-medium) var(--motion-standard);
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb, var(--primary) 50%, transparent) 0%,
+    transparent 70%);
+  pointer-events: none;
 }
 
 .hero-card.paused {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--warning) 30%, var(--surface-container)) 0%,
-    var(--surface-container) 100%);
+  background: radial-gradient(140% 120% at 0% 0%,
+    color-mix(in srgb, var(--warning) 55%, var(--surface-container-high)) 0%,
+    var(--surface-container-high) 100%);
+  color: var(--on-surface);
 }
 
 .hero-card.off {
   background: var(--surface-container-high);
   color: var(--on-surface-variant);
+  box-shadow: var(--elev-1);
 }
 
 .hero-status {
@@ -218,43 +251,46 @@ main {
   flex-direction: column;
   gap: var(--sp-1);
   min-width: 0;
+  z-index: 1;
 }
 
 .hero-label {
-  font-size: 0.75rem;          /* label-medium */
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  opacity: 0.72;
+  opacity: 0.75;
 }
 
 .hero-state {
-  font-size: 1.5rem;           /* headline-small */
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1.1;
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--sp-1);
+  gap: 2px;
+  z-index: 1;
 }
 
 .stat-value {
-  font-size: 2rem;             /* display-small-ish */
-  font-weight: 700;
+  font-size: 2.25rem;
+  font-weight: 800;
   line-height: 1;
+  letter-spacing: -1px;
   font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  opacity: 0.72;
+  opacity: 0.75;
 }
 
 /* ─────────── Surface card ─────────── */
@@ -262,10 +298,11 @@ main {
   background: var(--surface-container);
   border-radius: var(--shape-lg);
   padding: var(--sp-2);
+  box-shadow: var(--elev-1);
 }
 
 .list-card {
-  padding: 0;
+  padding: var(--sp-1);
   overflow: hidden;
 }
 
@@ -276,13 +313,14 @@ main {
   gap: var(--sp-3);
   padding: var(--sp-3) var(--sp-4);
   cursor: pointer;
+  border-radius: var(--shape-md);
   transition: background-color var(--dur-short) var(--motion-standard);
   min-height: 56px;
-  box-sizing: border-box;
+  position: relative;
 }
 
 .list-row:hover {
-  background-color: color-mix(in srgb, var(--on-surface) calc(var(--state-hover) * 100%), transparent);
+  background-color: color-mix(in srgb, var(--on-surface) 8%, transparent);
 }
 
 .list-text {
@@ -290,16 +328,17 @@ main {
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  flex: 1;
 }
 
 .list-title {
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.925rem;
+  font-weight: 600;
   color: var(--on-surface);
 }
 
 .list-desc {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: var(--on-surface-variant);
   line-height: 1.35;
 }
@@ -308,6 +347,7 @@ main {
   height: 1px;
   background: var(--outline-variant);
   margin: 0 var(--sp-4);
+  opacity: 0.6;
 }
 
 /* ─────────── MD3 Switch ─────────── */
@@ -398,6 +438,7 @@ main {
 
 .site-label {
   font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--on-surface-variant);
@@ -416,18 +457,20 @@ main {
 .md-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--sp-2);
   padding: 0 var(--sp-4);
-  height: 36px;
-  border-radius: var(--shape-sm);
+  height: 40px;
+  border-radius: var(--shape-full);
   font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   letter-spacing: 0.1px;
   cursor: pointer;
   transition: background-color var(--dur-short) var(--motion-standard),
               color var(--dur-short) var(--motion-standard),
               border-color var(--dur-short) var(--motion-standard),
+              box-shadow var(--dur-short) var(--motion-standard),
               transform var(--dur-short) var(--motion-emph);
   white-space: nowrap;
   background: var(--primary-container);
@@ -436,25 +479,27 @@ main {
 }
 
 .md-chip:hover {
-  background: color-mix(in srgb, var(--primary-container) 88%, var(--on-primary-container));
+  background: color-mix(in srgb, var(--primary-container) 85%, var(--on-primary-container));
+  box-shadow: var(--elev-1);
 }
 
 .md-chip:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 .md-chip.active {
   background: var(--primary);
   color: var(--on-primary);
+  box-shadow: var(--elev-2);
 }
 
 .md-chip-tonal {
-  background: var(--secondary);
-  color: var(--on-secondary);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
 }
 
 .md-chip-tonal:hover {
-  background: color-mix(in srgb, var(--secondary) 88%, var(--on-secondary));
+  background: color-mix(in srgb, var(--secondary-container) 85%, var(--on-secondary-container));
 }
 
 .md-chip-outlined {
@@ -464,13 +509,15 @@ main {
 }
 
 .md-chip-outlined:hover {
-  background: color-mix(in srgb, var(--primary) calc(var(--state-hover) * 100%), transparent);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   border-color: var(--primary);
+  box-shadow: none;
 }
 
 .md-chip:disabled {
   opacity: 0.38;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .chip-icon {
@@ -486,7 +533,6 @@ main {
 
 .pause-row .md-chip {
   flex: 1;
-  justify-content: center;
 }
 
 /* ─────────── Footer ─────────── */
@@ -498,7 +544,7 @@ footer {
 .footer-tagline {
   font-size: 0.72rem;
   color: var(--on-surface-variant);
-  opacity: 0.56;
+  opacity: 0.5;
   margin: 0;
   letter-spacing: 0.3px;
 }
@@ -511,4 +557,8 @@ main::-webkit-scrollbar {
 main::-webkit-scrollbar-thumb {
   background: var(--outline-variant);
   border-radius: var(--shape-full);
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
 }
