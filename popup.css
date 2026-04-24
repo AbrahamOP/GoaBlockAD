@@ -108,8 +108,8 @@
 }
 
 body {
-  width: 360px;
-  min-height: 600px;
+  width: 380px;
+  min-height: 680px;
   margin: 0;
   padding: 0;
   font-family: 'Inter', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -123,7 +123,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 600px;
+  min-height: 680px;
 }
 
 /* ─────────── App bar ─────────── */
@@ -131,7 +131,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: var(--sp-4) var(--sp-5);
+  padding: var(--sp-5) var(--sp-6) var(--sp-4);
   background: var(--surface);
   position: relative;
   z-index: 5;
@@ -191,10 +191,10 @@ body {
 /* ─────────── Main ─────────── */
 main {
   flex: 1;
-  padding: 0 var(--sp-5) var(--sp-4);
+  padding: 0 var(--sp-6) var(--sp-5);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
   overflow-y: auto;
 }
 
@@ -206,12 +206,13 @@ main {
     color-mix(in srgb, var(--primary-container) 70%, var(--surface)) 100%);
   color: var(--on-primary-container);
   border-radius: var(--shape-xl);
-  padding: var(--sp-5) var(--sp-6);
+  padding: var(--sp-6) var(--sp-6);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-4);
-  min-height: 112px;
+  min-height: 128px;
+  margin-top: var(--sp-2);
   box-shadow: var(--elev-2);
   position: relative;
   overflow: hidden;
@@ -297,12 +298,12 @@ main {
 .surface {
   background: var(--surface-container);
   border-radius: var(--shape-lg);
-  padding: var(--sp-2);
+  padding: var(--sp-3);
   box-shadow: var(--elev-1);
 }
 
 .list-card {
-  padding: var(--sp-1);
+  padding: var(--sp-2);
   overflow: hidden;
 }
 
@@ -311,11 +312,11 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-4) var(--sp-4);
   cursor: pointer;
   border-radius: var(--shape-md);
   transition: background-color var(--dur-short) var(--motion-standard);
-  min-height: 56px;
+  min-height: 64px;
   position: relative;
 }
 
@@ -346,8 +347,8 @@ main {
 .list-divider {
   height: 1px;
   background: var(--outline-variant);
-  margin: 0 var(--sp-4);
-  opacity: 0.6;
+  margin: var(--sp-1) var(--sp-4);
+  opacity: 0.5;
 }
 
 /* ─────────── MD3 Switch ─────────── */
@@ -425,7 +426,8 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  min-height: 72px;
 }
 
 .site-info {
@@ -555,8 +557,8 @@ main {
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
-  padding: 0 var(--sp-4);
-  height: 40px;
+  padding: 0 var(--sp-5);
+  height: 44px;
   border-radius: var(--shape-full);
   font-family: inherit;
   font-size: 0.875rem;
@@ -624,7 +626,8 @@ main {
 
 .pause-row {
   display: flex;
-  gap: var(--sp-2);
+  gap: var(--sp-3);
+  margin-top: var(--sp-1);
 }
 
 .pause-row .md-chip {
@@ -634,7 +637,8 @@ main {
 /* ─────────── Footer ─────────── */
 footer {
   text-align: center;
-  padding: var(--sp-3) var(--sp-5) var(--sp-4);
+  padding: var(--sp-5) var(--sp-5) var(--sp-5);
+  margin-top: auto;
 }
 
 .footer-tagline {
