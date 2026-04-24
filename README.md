@@ -36,20 +36,15 @@ Elle combine un blocage réseau efficace (Manifest V3) et un nettoyage visuel po
 
 ## Publier une nouvelle version 🚀
 
-Le dépôt publie automatiquement une release GitHub (avec le ZIP prêt à charger dans Chrome) à chaque tag `v*` :
+Les releases sont **automatiques** : à chaque push/merge sur `main`, le workflow `.github/workflows/release.yml` lit la version de `manifest.json` et, si le tag `vX.Y.Z` correspondant n'existe pas encore, il :
 
-```bash
-git tag v1.1.0
-git push origin v1.1.0
-```
+1. Valide les JSON et la syntaxe JS.
+2. Construit `GoaBlockAD-vX.Y.Z.zip` (sans `.git`, `.github`, `_metadata`).
+3. Crée le tag Git + la release GitHub avec des notes auto-générées et le ZIP en asset.
 
-Le workflow `.github/workflows/release.yml` :
-1. Synchronise `manifest.json` avec la version du tag.
-2. Valide les JSON et la syntaxe JS.
-3. Construit `GoaBlockAD-vX.Y.Z.zip` (sans `.git`, `.github`, `_metadata`).
-4. Crée la release GitHub avec des notes auto-générées et le ZIP en asset.
+**Pour publier** : bumpe le champ `version` dans `manifest.json`, commite, merge sur `main`. Terminé.
 
-Une publication manuelle est aussi possible via **Actions → Release → Run workflow**.
+Une publication manuelle est aussi possible via **Actions → Release → Run workflow** (en précisant éventuellement une version à forcer).
 
 ## Contribuer 🤝
 

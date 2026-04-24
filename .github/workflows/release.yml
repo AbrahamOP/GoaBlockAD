@@ -2,16 +2,19 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version à publier (ex: 1.2.0)'
-        required: true
+        description: 'Version à publier (laisser vide pour lire manifest.json)'
+        required: false
 
 permissions:
   contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   build-and-release:
@@ -19,19 +22,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Resolve version
         id: version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
             VERSION="${{ github.event.inputs.version }}"
           else
-            VERSION="${GITHUB_REF_NAME#v}"
+            VERSION=$(node -e "console.log(require('./manifest.json').version)")
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Publishing version: $VERSION"
+          echo "Resolved version: v$VERSION"
 
-      - name: Sync manifest.json version
+      - name: Check if release already exists
+        id: check
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if git rev-parse --verify "refs/tags/v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists — skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No existing tag for v$VERSION — will create release."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sync manifest.json version (workflow_dispatch only)
+        if: steps.check.outputs.skip == 'false' && github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           node -e "
@@ -40,14 +58,15 @@ jobs:
             m.version = '$VERSION';
             fs.writeFileSync('manifest.json', JSON.stringify(m, null, 2) + '\n');
           "
-          cat manifest.json | grep '"version"'
 
       - name: Validate manifest and rules
+        if: steps.check.outputs.skip == 'false'
         run: |
           node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('rules.json','utf8'))"
 
       - name: Build ZIP
+        if: steps.check.outputs.skip == 'false'
         id: build
         run: |
           VERSION="${{ steps.version.outputs.version }}"
@@ -59,12 +78,23 @@ jobs:
             -x "_metadata/*" \
             -x "*.zip" \
             -x "README.md" \
+            -x "PRIVACY.md" \
             -x ".gemini/*" \
             -x "node_modules/*"
           ls -lh "$ARTIFACT"
           echo "artifact=$ARTIFACT" >> "$GITHUB_OUTPUT"
 
+      - name: Create tag
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
+
       - name: Create GitHub Release
+        if: steps.check.outputs.skip == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
