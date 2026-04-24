@@ -148,33 +148,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         customCount.textContent = `${lines.length} règle(s) personnalisée(s)`;
     }
 
-    // Save custom filters
+    // Save custom filters — background.js rebuilds the dynamic rules via storage.onChanged
     btnCustomSave.addEventListener('click', async () => {
         const raw = customTextarea.value;
         await chrome.storage.local.set({ customFilters: raw });
-
-        // Build dynamic rules from custom domains
-        const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('#'));
-        const dynamicRules = lines.map((domain, i) => ({
-            id: 10000 + i,
-            priority: 1,
-            action: { type: 'block' },
-            condition: {
-                urlFilter: domain,
-                resourceTypes: ['script', 'image', 'xmlhttprequest', 'sub_frame', 'stylesheet', 'font', 'media', 'other']
-            }
-        }));
-
-        // Remove old dynamic rules, then add new ones
-        const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
-        const removeIds = existingRules.map(r => r.id);
-
-        await chrome.declarativeNetRequest.updateDynamicRules({
-            removeRuleIds: removeIds,
-            addRules: dynamicRules
-        });
-
-        showToast(`${dynamicRules.length} filtre(s) personnalisé(s) appliqué(s)`);
+        const lineCount = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('#')).length;
+        showToast(`${lineCount} filtre(s) personnalisé(s) appliqué(s)`);
     });
 
     // Cancel – reload saved filters
