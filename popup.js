@@ -68,17 +68,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function updateStatusText(en, pu) {
+        const hero = document.getElementById('hero-card');
         const isPaused = pu && Date.now() < pu;
-        if (isPaused) {
-            statusState.textContent = 'PAUSE';
-            statusState.style.color = '#ffb300';
-        } else if (en) {
-            statusState.textContent = 'ACTIVE';
-            statusState.style.color = '#00bcd4';
-        } else {
-            statusState.textContent = 'INACTIVE';
-            statusState.style.color = '#ff5252';
-        }
+        hero.classList.toggle('paused', !!isPaused);
+        hero.classList.toggle('off', !en && !isPaused);
+        if (isPaused) statusState.textContent = 'PAUSE';
+        else if (en) statusState.textContent = 'ACTIVE';
+        else statusState.textContent = 'INACTIVE';
     }
 
     function updateWhitelistButton(domain, list) {
