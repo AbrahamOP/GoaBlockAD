@@ -3,6 +3,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
     // ──────────────────────────────────────────────
+    // About — fill version dynamically from manifest
+    // ──────────────────────────────────────────────
+    const versionEl = document.getElementById('about-version');
+    if (versionEl && chrome.runtime?.getManifest) {
+        versionEl.textContent = `Version ${chrome.runtime.getManifest().version}`;
+    }
+
+    // ──────────────────────────────────────────────
     // Tab Navigation
     // ──────────────────────────────────────────────
     const tabs = document.querySelectorAll('.tab');
