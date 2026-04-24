@@ -6,45 +6,20 @@
     </linearGradient>
   </defs>
 
-  <!-- Shield silhouette: rounded top with slight V notch, smooth sides, pointed rounded bottom -->
+  <!-- Shield: rounded top, gently bulging sides, pronounced taper to a rounded point at bottom -->
   <path fill="url(#shieldGrad)" d="
-    M 296 174
-    L 478 174
-    Q 512 142 546 174
-    L 728 174
-    Q 794 174 794 240
-    L 794 540
-    Q 794 706 708 800
-    Q 614 882 512 894
-    Q 410 882 316 800
-    Q 230 706 230 540
-    L 230 240
-    Q 230 174 296 174
+    M 296 168
+    L 728 168
+    Q 800 168 800 240
+    L 800 478
+    C 800 706, 668 866, 512 906
+    C 356 866, 224 706, 224 478
+    L 224 240
+    Q 224 168 296 168
     Z"/>
 
-  <!-- Letter G: built as one shape using even-odd fill-rule -->
-  <!-- Outer ring + inside cut + opening on the right + horizontal terminal -->
-  <path fill="#000000" fill-rule="evenodd" d="
-    M 512 332
-    A 220 220 0 1 0 716 632
-    L 716 502
-    L 504 502
-    L 504 580
-    L 632 580
-    A 144 144 0 1 1 596 462
-    L 668 408
-    A 220 220 0 0 0 512 332
-    Z
-    M 512 396
-    A 156 156 0 1 1 512 708
-    A 156 156 0 0 1 512 396
-    Z"/>
-
-  <!-- Slanted crossbar accent: a parallelogram that overlays the inner gap to give the G its modern slanted look -->
-  <path fill="#000000" d="
-    M 504 540
-    L 716 502
-    L 716 540
-    L 504 580
-    Z"/>
+  <!-- Bold G centered in the shield -->
+  <text x="512" y="700" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif"
+        font-size="520" font-weight="bold"
+        text-anchor="middle" fill="#000">G</text>
 </svg>
