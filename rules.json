@@ -169,5 +169,131 @@
             "urlFilter": "||advertising.com^",
             "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
         }
+    },
+    {
+        "id": 20,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||googletagmanager.com^",
+            "resourceTypes": ["script", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 21,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||hotjar.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 22,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||mixpanel.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 23,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||segment.io^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 24,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||segment.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 25,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||amplitude.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 26,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||mc.yandex.ru^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 27,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||quantserve.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 28,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||chartbeat.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 29,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||moatads.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 30,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||adsafeprotected.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 31,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||2mdn.net^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 32,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||adform.net^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 33,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||smartadserver.com^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
     }
 ]

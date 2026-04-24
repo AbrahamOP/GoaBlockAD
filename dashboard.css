@@ -623,3 +623,95 @@ input:checked+.slider::before {
         align-items: flex-start;
     }
 }
+/* ─────────────── Sites & Stats tab ─────────────── */
+.whitelist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.whitelist li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #2a2b2d;
+    border: 1px solid #3a3a3c;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+}
+
+.whitelist-empty,
+.top-domains-empty {
+    opacity: 0.5;
+    font-style: italic;
+    justify-content: center !important;
+}
+
+.whitelist .btn-remove {
+    background: transparent;
+    border: 1px solid #ef5350;
+    color: #ef5350;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.whitelist .btn-remove:hover {
+    background: rgba(239, 83, 80, 0.15);
+}
+
+.top-domains {
+    list-style: none;
+    counter-reset: rank;
+    padding: 0;
+    margin: 0 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.top-domains li {
+    counter-increment: rank;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    background: #2a2b2d;
+    border-radius: 8px;
+    font-size: 0.88rem;
+}
+
+.top-domains li::before {
+    content: counter(rank);
+    color: #4dd0e1;
+    font-weight: 700;
+    min-width: 1.4em;
+    text-align: right;
+}
+
+.top-domains .dom-bar {
+    flex: 1;
+    height: 6px;
+    background: #1a1b1c;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.top-domains .dom-bar > span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #00bcd4, #4dd0e1);
+}
+
+.top-domains .dom-count {
+    min-width: 3.5em;
+    text-align: right;
+    color: #b0bec5;
+    font-variant-numeric: tabular-nums;
+}

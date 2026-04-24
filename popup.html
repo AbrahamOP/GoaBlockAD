@@ -10,48 +10,74 @@
 
 <body>
   <div class="container">
-    <header>
-      <img src="images/icon48.png" alt="Logo" class="logo">
-      <h1>GoaBlockAD</h1>
-      <button id="btn-open-dashboard" class="btn-settings" title="Ouvrir les paramètres">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3" />
-          <path
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    <header class="app-bar">
+      <img src="images/icon48.png" alt="" class="app-logo">
+      <h1 class="app-title">GoaBlockAD</h1>
+      <button id="btn-open-dashboard" class="icon-btn" title="Ouvrir les paramètres" aria-label="Paramètres">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M19.14 12.94a7.08 7.08 0 0 0 .06-.94a7.08 7.08 0 0 0-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.63l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.43h-3.84a.5.5 0 0 0-.5.43l-.36 2.54a7.03 7.03 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.6.22L2.68 8.85a.5.5 0 0 0 .12.63l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.63l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54a.5.5 0 0 0 .5.43h3.84a.5.5 0 0 0 .5-.43l.36-2.54a7.03 7.03 0 0 0 1.62-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.63l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Z"/>
         </svg>
       </button>
     </header>
 
     <main>
-      <div class="status-card">
-        <p class="status-text">Protection : <span id="status-state">ACTIVE</span></p>
-        <div class="toggle-row">
-          <label class="switch">
-            <input type="checkbox" id="toggle-protection" checked>
-            <span class="slider round"></span>
-          </label>
+      <section class="hero-card" id="hero-card">
+        <div class="hero-status">
+          <span class="hero-label">Protection</span>
+          <span class="hero-state" id="status-state">ACTIVE</span>
         </div>
-      </div>
-
-      <div class="status-card small-card">
-        <p class="status-text-small">Nettoyage Visuel</p>
-        <label class="switch small-switch">
-          <input type="checkbox" id="toggle-cosmetic" checked>
-          <span class="slider round"></span>
-        </label>
-      </div>
-
-      <div class="stats">
-        <div class="stat-item">
+        <div class="stat">
           <span class="stat-value" id="blocked-count">0</span>
-          <span class="stat-label">Pubs Bloquées</span>
+          <span class="stat-label">pubs bloquées</span>
         </div>
-      </div>
+      </section>
+
+      <section class="surface list-card">
+        <label class="list-row" for="toggle-protection">
+          <div class="list-text">
+            <span class="list-title">Blocage réseau</span>
+            <span class="list-desc">Active toutes les règles de blocage.</span>
+          </div>
+          <span class="md-switch">
+            <input type="checkbox" id="toggle-protection" checked>
+            <span class="md-switch-track"><span class="md-switch-thumb"></span></span>
+          </span>
+        </label>
+        <div class="list-divider"></div>
+        <label class="list-row" for="toggle-cosmetic">
+          <div class="list-text">
+            <span class="list-title">Nettoyage visuel</span>
+            <span class="list-desc">Masque les emplacements publicitaires restants.</span>
+          </div>
+          <span class="md-switch">
+            <input type="checkbox" id="toggle-cosmetic" checked>
+            <span class="md-switch-track"><span class="md-switch-thumb"></span></span>
+          </span>
+        </label>
+      </section>
+
+      <section class="surface site-card">
+        <div class="site-info">
+          <span class="site-label">Site actuel</span>
+          <span class="site-domain" id="current-domain">—</span>
+        </div>
+        <button class="md-chip" id="btn-whitelist">Autoriser ici</button>
+      </section>
+
+      <section class="pause-row">
+        <button class="md-chip md-chip-tonal" id="btn-pause" data-minutes="15">
+          <svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5h3v14H8zm5 0h3v14h-3z"/></svg>
+          Pause 15 min
+        </button>
+        <button class="md-chip md-chip-outlined" id="btn-resume" hidden>
+          <svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          Reprendre
+        </button>
+      </section>
     </main>
 
     <footer>
-      <p class="footer-tagline">Profitez du calme du Goa.</p>
+      <p class="footer-tagline">Navigation légère et sans pub.</p>
     </footer>
   </div>
   <script src="popup.js"></script>

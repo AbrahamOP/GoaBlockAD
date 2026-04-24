@@ -5,8 +5,9 @@
   "description": "Une extension simple et efficace pour bloquer les publicités.",
   "permissions": [
     "declarativeNetRequest",
-    "declarativeNetRequestFeedback",
-    "storage"
+    "storage",
+    "alarms",
+    "activeTab"
   ],
   "host_permissions": [
     "<all_urls>"
