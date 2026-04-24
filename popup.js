@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     const toggleProtection = document.getElementById('toggle-protection');
     const toggleCosmetic = document.getElementById('toggle-cosmetic');
     const statusState = document.getElementById('status-state');
@@ -8,24 +8,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnPause = document.getElementById('btn-pause');
     const btnResume = document.getElementById('btn-resume');
     const btnDashboard = document.getElementById('btn-open-dashboard');
+    const hero = document.getElementById('hero-card');
 
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    const currentDomain = extractDomain(tab?.url);
-    currentDomainEl.textContent = currentDomain || 'Page système';
-    if (!currentDomain) btnWhitelist.disabled = true;
+    let currentDomain = null;
+    let currentTabId = null;
 
-    const state = await chrome.storage.local.get(['enabled', 'cosmetic', 'count', 'whitelist', 'pausedUntil']);
-    const enabled = state.enabled !== false;
-    const cosmetic = state.cosmetic !== false;
-    const whitelist = state.whitelist || [];
-    const pausedUntil = state.pausedUntil || 0;
+    // Attach listeners IMMEDIATELY so they survive async errors below.
+    btnDashboard?.addEventListener('click', () => {
+        if (chrome.runtime.openOptionsPage) chrome.runtime.openOptionsPage();
+        else window.open(chrome.runtime.getURL('dashboard.html'));
+    });
 
-    toggleProtection.checked = enabled;
-    toggleCosmetic.checked = cosmetic;
-    blockedCount.textContent = (state.count || 0).toLocaleString('fr-FR');
-    updateStatusText(enabled, pausedUntil);
-    updateWhitelistButton(currentDomain, whitelist);
-    updatePauseButtons(pausedUntil);
+    toggleProtection.addEventListener('change', (e) => {
+        chrome.storage.local.set({ enabled: e.target.checked });
+    });
+
+    toggleCosmetic.addEventListener('change', (e) => {
+        chrome.storage.local.set({ cosmetic: e.target.checked });
+    });
+
+    btnWhitelist.addEventListener('click', async () => {
+        if (!currentDomain) return;
+        await chrome.runtime.sendMessage({ type: 'toggleWhitelist', domain: currentDomain });
+        if (currentTabId) chrome.tabs.reload(currentTabId);
+    });
+
+    btnPause.addEventListener('click', () => {
+        const minutes = Number(btnPause.dataset.minutes) || 15;
+        chrome.runtime.sendMessage({ type: 'pauseProtection', minutes });
+    });
+
+    btnResume.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ type: 'resumeProtection' });
+    });
 
     chrome.storage.onChanged.addListener((changes, namespace) => {
         if (namespace !== 'local') return;
@@ -40,35 +55,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    toggleProtection.addEventListener('change', async (e) => {
-        await chrome.storage.local.set({ enabled: e.target.checked });
-    });
+    // Initial population — safe to fail
+    (async () => {
+        try {
+            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            currentTabId = tab?.id ?? null;
+            currentDomain = extractDomain(tab?.url);
+        } catch (err) {
+            console.warn('tabs.query failed', err);
+        }
+        currentDomainEl.textContent = currentDomain || 'Page système';
+        if (!currentDomain) btnWhitelist.disabled = true;
 
-    toggleCosmetic.addEventListener('change', async (e) => {
-        await chrome.storage.local.set({ cosmetic: e.target.checked });
-    });
+        const state = await chrome.storage.local.get(['enabled', 'cosmetic', 'count', 'whitelist', 'pausedUntil']);
+        const enabled = state.enabled !== false;
+        const cosmetic = state.cosmetic !== false;
+        const whitelist = state.whitelist || [];
+        const pausedUntil = state.pausedUntil || 0;
 
-    btnWhitelist.addEventListener('click', async () => {
-        if (!currentDomain) return;
-        await chrome.runtime.sendMessage({ type: 'toggleWhitelist', domain: currentDomain });
-        if (tab?.id) chrome.tabs.reload(tab.id);
-    });
-
-    btnPause.addEventListener('click', async () => {
-        const minutes = Number(btnPause.dataset.minutes) || 15;
-        await chrome.runtime.sendMessage({ type: 'pauseProtection', minutes });
-    });
-
-    btnResume.addEventListener('click', async () => {
-        await chrome.runtime.sendMessage({ type: 'resumeProtection' });
-    });
-
-    if (btnDashboard) {
-        btnDashboard.addEventListener('click', () => chrome.runtime.openOptionsPage());
-    }
+        toggleProtection.checked = enabled;
+        toggleCosmetic.checked = cosmetic;
+        blockedCount.textContent = (state.count || 0).toLocaleString('fr-FR');
+        updateStatusText(enabled, pausedUntil);
+        updateWhitelistButton(currentDomain, whitelist);
+        updatePauseButtons(pausedUntil);
+    })();
 
     function updateStatusText(en, pu) {
-        const hero = document.getElementById('hero-card');
         const isPaused = pu && Date.now() < pu;
         hero.classList.toggle('paused', !!isPaused);
         hero.classList.toggle('off', !en && !isPaused);
@@ -93,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnResume.hidden = !isPaused;
         if (isPaused) {
             const mins = Math.ceil((pu - Date.now()) / 60000);
-            btnResume.textContent = `Reprendre (${mins} min restantes)`;
+            btnResume.innerHTML = `<svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>Reprendre (${mins} min)`;
         }
     }
 
