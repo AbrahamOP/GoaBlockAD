@@ -185,6 +185,13 @@ body {
   background: color-mix(in srgb, var(--on-surface) 6%, transparent);
 }
 
+.tab:focus { outline: none; }
+
+.tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
 .tab.active {
   color: var(--primary);
 }
