@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5DD8F0"/>
+      <stop offset="100%" stop-color="#0E92E0"/>
+    </linearGradient>
+  </defs>
+  <!-- Shield, filling almost the full canvas for legibility at 16px -->
+  <path fill="url(#g)" d="
+    M 5 3
+    L 13 3
+    Q 16 1 19 3
+    L 27 3
+    Q 30 3 30 6
+    L 30 17
+    Q 30 24 26 27
+    Q 21 30 16 31
+    Q 11 30 6 27
+    Q 2 24 2 17
+    L 2 6
+    Q 2 3 5 3
+    Z"/>
+  <!-- Bold compact G (no inner detail — just an open ring with a stub) -->
+  <path fill="#000" d="
+    M 16 8
+    A 8 8 0 1 0 24 18
+    L 24 14
+    L 16 14
+    L 16 18
+    L 20 18
+    A 4 4 0 1 1 19 13
+    L 23 10
+    A 8 8 0 0 0 16 8
+    Z"/>
+</svg>
