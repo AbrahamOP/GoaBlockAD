@@ -34,6 +34,23 @@ Elle combine un blocage réseau efficace (Manifest V3) et un nettoyage visuel po
 *   **JavaScript (ES6+)** : Logique légère et rapide.
 *   **CSS3** : Design moderne sans framework lourd.
 
+## Publier une nouvelle version 🚀
+
+Le dépôt publie automatiquement une release GitHub (avec le ZIP prêt à charger dans Chrome) à chaque tag `v*` :
+
+```bash
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+Le workflow `.github/workflows/release.yml` :
+1. Synchronise `manifest.json` avec la version du tag.
+2. Valide les JSON et la syntaxe JS.
+3. Construit `GoaBlockAD-vX.Y.Z.zip` (sans `.git`, `.github`, `_metadata`).
+4. Crée la release GitHub avec des notes auto-générées et le ZIP en asset.
+
+Une publication manuelle est aussi possible via **Actions → Release → Run workflow**.
+
 ## Contribuer 🤝
 
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une *Issue* ou une *Pull Request* pour suggérer des améliorations ou ajouter de nouvelles règles de blocage.
