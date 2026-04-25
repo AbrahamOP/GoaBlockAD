@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Screenshot 3 — Dashboard Listes de filtres</title>
+  <link rel="stylesheet" href="../dashboard.css">
+  <style>
+    html, body {
+      width: 1280px;
+      height: 800px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    .dashboard {
+      max-height: 800px;
+      overflow: hidden;
+    }
+    /* Local stub styles to mirror dashboard filter list look without depending on JS */
+    .filter-stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 4px;
+      color: var(--on-surface-variant);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .filter-search {
+      width: 280px;
+      padding: 10px 14px;
+      background: var(--surface-container);
+      border: 1px solid var(--outline-variant);
+      border-radius: 999px;
+      color: var(--on-surface);
+      font-family: inherit;
+      font-size: 0.85rem;
+    }
+    .filter-category {
+      background: var(--surface-container);
+      border-radius: var(--shape-lg);
+      padding: 14px 18px;
+      box-shadow: var(--elev-1);
+      margin-bottom: 12px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 6px 0;
+    }
+    .category-chevron {
+      color: var(--primary);
+      font-size: 14px;
+    }
+    .category-count {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--on-surface-variant);
+      font-weight: 500;
+    }
+    .category-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 18px;
+      margin-top: 12px;
+      padding-left: 4px;
+    }
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 4px;
+      font-size: 0.86rem;
+      color: var(--on-surface);
+      cursor: pointer;
+    }
+    .filter-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <header class="dash-header">
+      <div class="header-brand">
+        <img src="../images/icon48.png" alt="GoaBlockAD" class="header-logo">
+        <h1>GoaBlockAD</h1>
+      </div>
+      <nav class="tabs">
+        <button class="tab" data-tab="settings">Paramètres</button>
+        <button class="tab" data-tab="sites">Sites &amp; Stats</button>
+        <button class="tab active" data-tab="filter-lists">Listes de filtres</button>
+        <button class="tab" data-tab="custom-filters">Filtres personnalisés</button>
+        <button class="tab" data-tab="about">À propos</button>
+      </nav>
+    </header>
+
+    <section id="tab-filter-lists" class="tab-content active">
+      <div class="filter-stats-bar">
+        <span>4 listes actives · 50+ disponibles</span>
+        <input type="text" class="filter-search" placeholder="Trouver des listes...">
+      </div>
+
+      <div class="filter-category">
+        <div class="category-header">
+          <span class="category-chevron">▾</span>
+          <strong>Par défaut</strong>
+          <span class="category-count">4 / 4</span>
+        </div>
+        <div class="category-body">
+          <label class="filter-item"><input type="checkbox" checked> EasyList</label>
+          <label class="filter-item"><input type="checkbox" checked> EasyPrivacy</label>
+          <label class="filter-item"><input type="checkbox" checked> Peter Lowe – Ads, trackers, and more</label>
+          <label class="filter-item"><input type="checkbox" checked> uBlock filters – Ads, trackers, and more</label>
+        </div>
+      </div>
+
+      <div class="filter-category">
+        <div class="category-header">
+          <span class="category-chevron">▾</span>
+          <strong>Confidentialité</strong>
+          <span class="category-count">1 / 2</span>
+        </div>
+        <div class="category-body">
+          <label class="filter-item"><input type="checkbox" checked> AdGuard/uBO – URL Tracking Protection</label>
+          <label class="filter-item"><input type="checkbox"> Block Outsider Intrusion into LAN</label>
+        </div>
+      </div>
+
+      <div class="filter-category">
+        <div class="category-header">
+          <span class="category-chevron">▾</span>
+          <strong>Protection contre les logiciels malveillants, sécurité</strong>
+          <span class="category-count">2 / 2</span>
+        </div>
+        <div class="category-body">
+          <label class="filter-item"><input type="checkbox" checked> uBlock filters – Badware risks</label>
+          <label class="filter-item"><input type="checkbox" checked> Malicious URL Blocklist</label>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

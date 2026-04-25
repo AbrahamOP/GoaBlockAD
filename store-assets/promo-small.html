@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Petite image promo — 440x280</title>
+  <style>
+    html, body {
+      width: 440px;
+      height: 280px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Inter', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(120% 100% at 100% 0%, #4fd8eb 0%, #00677a 35%, #003d47 70%, #0a1417 100%);
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+    }
+    .stage {
+      position: relative;
+      width: 440px;
+      height: 280px;
+      padding: 32px 36px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .stage::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(159, 239, 255, 0.4) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 1;
+    }
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+    .brand {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .copy {
+      z-index: 1;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #9fefff, #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    p {
+      margin: 0;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #cde7ec;
+      line-height: 1.45;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(159, 239, 255, 0.15);
+      border: 1px solid rgba(159, 239, 255, 0.3);
+      color: #9fefff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .badge .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #4fd8eb;
+      box-shadow: 0 0 8px #4fd8eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="top">
+      <img src="../images/icon128.png" alt="" class="logo">
+      <span class="brand">GoaBlockAD</span>
+    </div>
+    <div class="copy">
+      <h1>Bloquez les pubs.<br><em>Gardez votre vie privée.</em></h1>
+      <p>Filtrage Manifest V3 + nettoyage visuel. 100 % local.</p>
+      <span class="badge"><span class="dot"></span>Open source</span>
+    </div>
+  </div>
+</body>
+</html>

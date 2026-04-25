@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Screenshot 2 — Dashboard Paramètres</title>
+  <link rel="stylesheet" href="../dashboard.css">
+  <style>
+    html, body {
+      width: 1280px;
+      height: 800px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    /* Fade scrollable overflow nicely */
+    .dashboard {
+      max-height: 800px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <header class="dash-header">
+      <div class="header-brand">
+        <img src="../images/icon48.png" alt="GoaBlockAD" class="header-logo">
+        <h1>GoaBlockAD</h1>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" data-tab="settings">Paramètres</button>
+        <button class="tab" data-tab="sites">Sites &amp; Stats</button>
+        <button class="tab" data-tab="filter-lists">Listes de filtres</button>
+        <button class="tab" data-tab="custom-filters">Filtres personnalisés</button>
+        <button class="tab" data-tab="about">À propos</button>
+      </nav>
+    </header>
+
+    <section id="tab-settings" class="tab-content active">
+      <div class="section-card">
+        <h2>Protection</h2>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Blocage réseau</span>
+            <span class="setting-desc">Bloque les requêtes publicitaires au niveau réseau via les règles declarativeNetRequest.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Nettoyage cosmétique</span>
+            <span class="setting-desc">Masque les éléments visuels publicitaires restants (bannières, encarts, iframes).</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>Statistiques</h2>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Publicités bloquées</span>
+            <span class="setting-desc">Nombre total de publicités bloquées depuis l'installation.</span>
+          </div>
+          <span class="stat-badge">14 327</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Réinitialiser le compteur</span>
+            <span class="setting-desc">Remet le compteur de publicités bloquées à zéro.</span>
+          </div>
+          <button class="btn btn-danger">Réinitialiser</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

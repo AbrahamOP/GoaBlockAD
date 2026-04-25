@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Grande image promo — 1400x560</title>
+  <style>
+    html, body {
+      width: 1400px;
+      height: 560px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Inter', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(70% 110% at 88% 50%, #4fd8eb 0%, #00677a 28%, #003d47 60%, #0a1417 100%);
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+    }
+    .stage {
+      position: relative;
+      width: 1400px;
+      height: 560px;
+      padding: 64px 88px;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 80px;
+      align-items: center;
+    }
+    .stage::before {
+      content: '';
+      position: absolute;
+      top: -160px;
+      right: -160px;
+      width: 540px;
+      height: 540px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(159, 239, 255, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .left { z-index: 1; }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    .brand {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1;
+    }
+    h1 {
+      margin: 0 0 22px;
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1.04;
+      letter-spacing: -2.5px;
+      max-width: 720px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #9fefff, #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    p.lead {
+      margin: 0 0 28px;
+      font-size: 19px;
+      font-weight: 500;
+      color: #cde7ec;
+      line-height: 1.5;
+      max-width: 580px;
+    }
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(159, 239, 255, 0.12);
+      border: 1px solid rgba(159, 239, 255, 0.28);
+      color: #cde7ec;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .pill .check {
+      width: 16px; height: 16px;
+      color: #4fd8eb;
+    }
+
+    /* Right side — popup mockup card */
+    .right {
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .device {
+      width: 420px;
+      height: 380px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, #1d2124 0%, #101417 100%);
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(159, 239, 255, 0.15),
+        0 0 90px rgba(79, 216, 235, 0.18);
+      padding: 28px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .device-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .device-head img { width: 32px; height: 32px; border-radius: 999px; }
+    .device-head .title { font-weight: 700; font-size: 15px; color: #e1f5f8; }
+    .device-hero {
+      background: radial-gradient(140% 120% at 0% 0%, #007a8d 0%, #005965 55%, #003d47 100%);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .device-hero::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(79, 216, 235, 0.45) 0%, transparent 70%);
+    }
+    .device-hero .label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: rgba(159, 239, 255, 0.75);
+      margin-bottom: 4px;
+    }
+    .device-hero .state {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: #9fefff;
+    }
+    .device-hero .num {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      color: #ffffff;
+      line-height: 1;
+    }
+    .device-hero .num-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: rgba(159, 239, 255, 0.75);
+      text-align: right;
+      margin-top: 4px;
+    }
+    .device-row {
+      background: #1d2124;
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .device-row .row-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e1e3e4;
+    }
+    .device-row .row-desc {
+      font-size: 11.5px;
+      color: #c1c7cb;
+      margin-top: 2px;
+    }
+    .switch-on {
+      width: 44px; height: 26px;
+      border-radius: 999px;
+      background: #4fd8eb;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .switch-on::after {
+      content: '';
+      position: absolute;
+      top: 3px; right: 3px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #00363f;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="left">
+      <div class="brand-row">
+        <img src="../images/icon128.png" alt="" class="logo">
+        <span class="brand">GoaBlockAD</span>
+      </div>
+      <h1>Bloquez les pubs.<br><em>Préservez votre vie privée.</em></h1>
+      <p class="lead">Filtrage réseau Manifest V3, nettoyage visuel intégré et statistiques en temps réel — sans aucune donnée envoyée à l'extérieur.</p>
+      <div class="pills">
+        <span class="pill"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Manifest V3</span>
+        <span class="pill"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>50+ listes de filtres</span>
+        <span class="pill"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>100 % local</span>
+        <span class="pill"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Open source</span>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="device">
+        <div class="device-head">
+          <img src="../images/icon48.png" alt="">
+          <span class="title">GoaBlockAD</span>
+        </div>
+        <div class="device-hero">
+          <div>
+            <div class="label">Protection</div>
+            <div class="state">ACTIVE</div>
+          </div>
+          <div>
+            <div class="num">14&nbsp;327</div>
+            <div class="num-label">pubs bloquées</div>
+          </div>
+        </div>
+        <div class="device-row">
+          <div>
+            <div class="row-title">Blocage réseau</div>
+            <div class="row-desc">Active toutes les règles</div>
+          </div>
+          <span class="switch-on"></span>
+        </div>
+        <div class="device-row">
+          <div>
+            <div class="row-title">Nettoyage visuel</div>
+            <div class="row-desc">Masque les emplacements restants</div>
+          </div>
+          <span class="switch-on"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
