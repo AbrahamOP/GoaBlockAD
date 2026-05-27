@@ -37,6 +37,14 @@ GoaBlockAD blocks ads at two levels: **network requests** are killed before they
 
 ## Install
 
+### Chrome Web Store (recommended)
+
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/goablockad/iacipenfiandimlkkcmgafefcjcclhhl">
+    <img src="https://img.shields.io/badge/Chrome_Web_Store-Install-blue?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Install from Chrome Web Store"/>
+  </a>
+</p>
+
 ### Manual (developer mode)
 
 ```bash
