@@ -29,6 +29,7 @@ GoaBlockAD blocks ads at two levels: **network requests** are killed before they
 ## Features
 
 - **Network-level blocking** — Requests to Google Ads, Amazon, Criteo, Taboola, Outbrain, and 20+ ad networks are blocked before they reach your browser
+- **YouTube ad blocking** — Video ads are auto-skipped at the player level (fast-forward + skip button), in-feed and banner ad slots are hidden, and YouTube ad-tracking endpoints are blocked
 - **Cosmetic filtering** — Hides empty ad containers, sticky banners, and overlay placeholders that survive network blocking
 - **Real-time stats** — Live counter of blocked ads in the extension badge and popup
 - **Dashboard** — View blocked domains, manage filters, customize behavior

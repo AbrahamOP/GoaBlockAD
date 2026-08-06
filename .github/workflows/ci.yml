@@ -18,7 +18,7 @@ jobs:
 
       - name: Check JS syntax
         run: |
-          for f in background.js content.js popup.js dashboard.js; do
+          for f in background.js content.js popup.js dashboard.js youtube.js; do
             node --check "$f"
           done
 
