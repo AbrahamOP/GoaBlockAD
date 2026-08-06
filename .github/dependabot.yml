@@ -1,0 +1,10 @@
+# Veille de dépendances — Tier 1 (produit).
+# Extension MV3 sans gestionnaire de paquets : seules les actions sont suivies.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: monthly }
+    groups:
+      actions:
+        patterns: ["*"]
