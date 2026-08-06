@@ -295,5 +295,50 @@
             "urlFilter": "||smartadserver.com^",
             "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
         }
+    },
+    {
+        "id": 34,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||youtube.com/api/stats/ads",
+            "resourceTypes": ["xmlhttprequest", "image", "ping"]
+        }
+    },
+    {
+        "id": 35,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||youtube.com/pagead/",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame", "ping"]
+        }
+    },
+    {
+        "id": 36,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||youtube.com/ptracking",
+            "resourceTypes": ["xmlhttprequest", "image", "ping"]
+        }
+    },
+    {
+        "id": 37,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||googleads.g.doubleclick.net^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
+    },
+    {
+        "id": 38,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||static.doubleclick.net^",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+        }
     }
 ]

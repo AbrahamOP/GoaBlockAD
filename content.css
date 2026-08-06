@@ -1,2 +1,40 @@
 /* GoaBlockAD - Content CSS */
 /* We inject styles via JS to allow toggling, but this file is reserved for static overrides if needed. */
+
+/* YouTube: hide the video and overlays while an ad is playing so the user
+   doesn't see the brief flash before our auto-skip kicks in. The video
+   element keeps playing underneath so fast-forward still works. */
+.html5-video-player.ad-showing video,
+.html5-video-player.ad-interrupting video {
+    opacity: 0 !important;
+}
+
+.html5-video-player.ad-showing .ytp-ad-player-overlay,
+.html5-video-player.ad-showing .ytp-ad-player-overlay-layout,
+.html5-video-player.ad-showing .ytp-ad-image-overlay,
+.html5-video-player.ad-showing .ytp-ad-overlay-container,
+.html5-video-player.ad-showing .ytp-ad-text-overlay,
+.html5-video-player.ad-showing .ytp-ad-preview-container,
+.html5-video-player.ad-interrupting .ytp-ad-player-overlay,
+.html5-video-player.ad-interrupting .ytp-ad-player-overlay-layout {
+    display: none !important;
+}
+
+/* Hide every overlay/UI piece YouTube layers on top of an ad: the entire ad
+   module, the "promoted/sponsored" cards, action companions, surveys, etc.
+   The skip button is preserved in case the click programmatique is ignored
+   and the user wants to click it manually. */
+.video-ads,
+.ytp-ad-module,
+ytd-player[hidden-by-goablockad],
+.ytp-ad-action-interstitial,
+.ytp-ad-action-interstitial-background-container,
+.ytp-ad-action-interstitial-card,
+.ytp-ad-action-interstitial-image,
+.ytp-ad-action-interstitial-slot,
+.ytp-flyout-cta,
+.ytp-ad-survey,
+.ytp-ad-survey-questions,
+ytmusic-ad-slot-renderer {
+    display: none !important;
+}
