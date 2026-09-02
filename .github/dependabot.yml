@@ -7,4 +7,8 @@ updates:
     schedule: { interval: monthly }
     groups:
       actions:
+        applies-to: version-updates
+        patterns: ["*"]
+      actions-security:
+        applies-to: security-updates
         patterns: ["*"]
