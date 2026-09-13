@@ -76,6 +76,8 @@ jobs:
             -x ".github/*" \
             -x ".gitignore" \
             -x "_metadata/*" \
+            -x "store-assets/*" \
+            -x "images/icon-source.png" \
             -x "*.zip" \
             -x "README.md" \
             -x "PRIVACY.md" \
