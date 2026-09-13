@@ -550,6 +550,9 @@ main {
   white-space: nowrap;
 }
 
+/* The chips' display would otherwise override the hidden attribute */
+[hidden] { display: none !important; }
+
 /* ─────────── MD3 Chips / Buttons ─────────── */
 .md-chip {
   display: inline-flex;
