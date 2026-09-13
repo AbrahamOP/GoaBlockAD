@@ -4,6 +4,8 @@ const DYNAMIC_CUSTOM_START = 10000;
 const DYNAMIC_ALLOW_START = 20000;
 const PAUSE_ALARM = 'goablockad-pause-resume';
 const BADGE_COLOR = '#00bcd4';
+// Chrome caps "unsafe" dynamic rules (block, redirect…) at 5000.
+const MAX_CUSTOM_RULES = 5000;
 
 // ─────────────────────────────────────────────
 // Helpers
@@ -12,19 +14,41 @@ function parseCustomFilters(raw) {
     return (raw || '')
         .split('\n')
         .map(l => l.trim())
-        .filter(l => l.length > 0 && !l.startsWith('#'));
+        .filter(l => l.length > 0 && !l.startsWith('#') && !l.startsWith('!'));
+}
+
+// A bare domain or a URL becomes "||host^" (the domain and its subdomains);
+// anything already using DNR syntax (|, ^, *, /) is kept as-is.
+// Returns null for a line that can't be a valid filter.
+function toUrlFilter(line) {
+    const isUrl = /^[a-z]+:\/\//i.test(line);
+    if (!isUrl && /[|^*\/]/.test(line)) return /^[\x21-\x7e]+$/.test(line) ? line : null;
+    try {
+        // URL() lowercases and punycodes the host, but percent-escapes spaces instead of failing.
+        const host = new URL(isUrl ? line : 'http://' + line).hostname;
+        return /^[a-z0-9_-]+(\.[a-z0-9_-]+)*$/.test(host) ? '||' + host + '^' : null;
+    } catch (_) {
+        return null;
+    }
 }
 
 function buildCustomBlockRules(lines) {
-    return lines.map((domain, i) => ({
-        id: DYNAMIC_CUSTOM_START + i,
-        priority: 1,
-        action: { type: 'block' },
-        condition: {
-            urlFilter: domain,
-            resourceTypes: ['script', 'image', 'xmlhttprequest', 'sub_frame', 'stylesheet', 'font', 'media', 'other']
-        }
-    }));
+    const rules = [];
+    const rejected = [];
+    for (const line of lines.slice(0, MAX_CUSTOM_RULES)) {
+        const urlFilter = toUrlFilter(line);
+        if (!urlFilter) { rejected.push(line); continue; }
+        rules.push({
+            id: DYNAMIC_CUSTOM_START + rules.length,
+            priority: 1,
+            action: { type: 'block' },
+            condition: {
+                urlFilter,
+                resourceTypes: ['script', 'image', 'xmlhttprequest', 'sub_frame', 'stylesheet', 'font', 'media', 'other']
+            }
+        });
+    }
+    return { rules, rejected };
 }
 
 function buildAllowRules(domains) {
@@ -32,51 +56,53 @@ function buildAllowRules(domains) {
         id: DYNAMIC_ALLOW_START + i,
         priority: 100,
         action: { type: 'allowAllRequests' },
+        // Matching the top-level navigation to the domain allows every request
+        // of the page, sub-frames included.
         condition: {
-            initiatorDomains: [domain],
-            resourceTypes: ['main_frame', 'sub_frame']
+            requestDomains: [domain],
+            resourceTypes: ['main_frame']
         }
     }));
 }
 
-function extractDomain(url) {
-    try {
-        return new URL(url).hostname.replace(/^www\./, '');
-    } catch (_) {
-        return null;
-    }
-}
-
-function formatBadge(count) {
-    if (count < 1000) return String(count);
-    if (count < 10000) return (count / 1000).toFixed(1) + 'k';
-    if (count < 1000000) return Math.floor(count / 1000) + 'k';
-    return (count / 1000000).toFixed(1) + 'M';
-}
-
+// updateDynamicRules is all-or-nothing: one invalid rule would drop the whole
+// batch. Chrome names the faulty rule id, so drop it and retry.
 async function replaceDynamicRulesInRange(newRules, idStart, idEnd) {
-    try {
-        const existing = await chrome.declarativeNetRequest.getDynamicRules();
-        const removeRuleIds = existing
-            .filter(r => r.id >= idStart && r.id <= idEnd)
-            .map(r => r.id);
-        await chrome.declarativeNetRequest.updateDynamicRules({
-            removeRuleIds,
-            addRules: newRules
-        });
-        return { ok: true, count: newRules.length };
-    } catch (err) {
-        console.error('GoaBlockAD: updateDynamicRules failed', err);
-        return { ok: false, error: err.message };
+    let rules = newRules;
+    const rejected = [];
+    const existing = await chrome.declarativeNetRequest.getDynamicRules();
+    const removeRuleIds = existing
+        .filter(r => r.id >= idStart && r.id <= idEnd)
+        .map(r => r.id);
+    for (;;) {
+        try {
+            await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds, addRules: rules });
+            return { ok: true, count: rules.length, rejected };
+        } catch (err) {
+            const badId = Number(/\bid (\d+)/.exec(err.message)?.[1]);
+            const bad = rules.find(r => r.id === badId);
+            if (!bad) {
+                console.error('GoaBlockAD: updateDynamicRules failed', err);
+                return { ok: false, error: err.message, rejected };
+            }
+            rejected.push(bad.condition.urlFilter);
+            rules = rules.filter(r => r !== bad);
+        }
     }
 }
 
 // ─────────────────────────────────────────────
 // Custom filters (user-provided domains)
 // ─────────────────────────────────────────────
-async function rebuildCustomRules(raw) {
-    const rules = buildCustomBlockRules(parseCustomFilters(raw));
-    return replaceDynamicRulesInRange(rules, DYNAMIC_CUSTOM_START, DYNAMIC_CUSTOM_START + 9999);
+async function rebuildCustomRules() {
+    const { customFilters = '' } = await chrome.storage.local.get('customFilters');
+    const lines = parseCustomFilters(customFilters);
+    const { rules, rejected } = buildCustomBlockRules(lines);
+    const active = await isProtectionActive();
+    const res = await replaceDynamicRulesInRange(active ? rules : [], DYNAMIC_CUSTOM_START, DYNAMIC_CUSTOM_START + 9999);
+    res.rejected.unshift(...rejected);
+    res.truncated = Math.max(0, lines.length - MAX_CUSTOM_RULES);
+    return res;
 }
 
 // ─────────────────────────────────────────────
@@ -90,10 +116,13 @@ async function rebuildAllowRules(whitelist) {
 // ─────────────────────────────────────────────
 // Pause mode
 // ─────────────────────────────────────────────
-async function applyProtectionState() {
+async function isProtectionActive() {
     const { enabled = true, pausedUntil = 0 } = await chrome.storage.local.get(['enabled', 'pausedUntil']);
-    const isPaused = pausedUntil && Date.now() < pausedUntil;
-    const shouldEnable = enabled && !isPaused;
+    return enabled && !(pausedUntil && Date.now() < pausedUntil);
+}
+
+async function applyProtectionState() {
+    const shouldEnable = await isProtectionActive();
 
     try {
         if (shouldEnable) {
@@ -104,6 +133,8 @@ async function applyProtectionState() {
     } catch (err) {
         console.warn('GoaBlockAD: ruleset toggle warning', err.message);
     }
+    // Custom rules are dynamic and ignore the ruleset toggle: add/remove them too.
+    await rebuildCustomRules();
     updateBadgeStyle(shouldEnable);
 }
 
@@ -115,16 +146,12 @@ function updateBadgeStyle(active) {
     }
 }
 
+// While active, the badge shows Chrome's own per-tab count of blocked requests
+// (displayActionCountAsBadgeText); the global text only signals OFF / pause.
 async function refreshBadgeText() {
-    const { count = 0, enabled = true, pausedUntil = 0 } = await chrome.storage.local.get(['count', 'enabled', 'pausedUntil']);
+    const { enabled = true, pausedUntil = 0 } = await chrome.storage.local.get(['enabled', 'pausedUntil']);
     const isPaused = pausedUntil && Date.now() < pausedUntil;
-    if (!enabled) {
-        chrome.action.setBadgeText({ text: 'OFF' });
-    } else if (isPaused) {
-        chrome.action.setBadgeText({ text: '⏸' });
-    } else {
-        chrome.action.setBadgeText({ text: count > 0 ? formatBadge(count) : '' });
-    }
+    chrome.action.setBadgeText({ text: !enabled ? 'OFF' : isPaused ? '⏸' : '' });
 }
 
 // ─────────────────────────────────────────────
@@ -132,21 +159,21 @@ async function refreshBadgeText() {
 // ─────────────────────────────────────────────
 chrome.runtime.onInstalled.addListener(async () => {
     const result = await chrome.storage.local.get([
-        'enabled', 'cosmetic', 'count', 'filterStates', 'customFilters',
-        'whitelist', 'pausedUntil', 'domainStats'
+        'enabled', 'cosmetic', 'filterStates', 'customFilters', 'whitelist', 'pausedUntil'
     ]);
     const defaults = {};
     if (result.enabled === undefined) defaults.enabled = true;
     if (result.cosmetic === undefined) defaults.cosmetic = true;
-    if (result.count === undefined) defaults.count = 0;
     if (result.filterStates === undefined) defaults.filterStates = {};
     if (result.customFilters === undefined) defaults.customFilters = '';
     if (result.whitelist === undefined) defaults.whitelist = [];
     if (result.pausedUntil === undefined) defaults.pausedUntil = 0;
-    if (result.domainStats === undefined) defaults.domainStats = {};
     if (Object.keys(defaults).length > 0) {
         await chrome.storage.local.set(defaults);
     }
+    // Leftovers of the old counter (≤ 1.3.x), which only ever counted cosmetic hides.
+    await chrome.storage.local.remove(['count', 'domainStats']);
+    await chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: true });
     await rebuildAllowRules(result.whitelist || []);
     await applyProtectionState();
     await refreshBadgeText();
@@ -167,10 +194,11 @@ chrome.runtime.onStartup.addListener(async () => {
 // ─────────────────────────────────────────────
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
     if (namespace !== 'local') return;
-    if (changes.customFilters) await rebuildCustomRules(changes.customFilters.newValue);
     if (changes.whitelist) await rebuildAllowRules(changes.whitelist.newValue || []);
-    if (changes.enabled || changes.pausedUntil) await applyProtectionState();
-    if (changes.count || changes.enabled || changes.pausedUntil) await refreshBadgeText();
+    if (changes.enabled || changes.pausedUntil) {
+        await applyProtectionState();
+        await refreshBadgeText();
+    }
 });
 
 // ─────────────────────────────────────────────
@@ -211,13 +239,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 await chrome.storage.local.set({ whitelist: next });
                 return sendResponse({ ok: true, whitelisted: idx < 0, whitelist: next });
             }
-            case 'resetDomainStats': {
-                await chrome.storage.local.set({ domainStats: {} });
-                return sendResponse({ ok: true });
-            }
-            case 'rebuildCustomRules': {
-                const res = await rebuildCustomRules(msg.raw);
-                return sendResponse(res);
+            case 'saveCustomFilters': {
+                await chrome.storage.local.set({ customFilters: String(msg.raw || '') });
+                return sendResponse(await rebuildCustomRules());
             }
             default:
                 return sendResponse({ ok: false, error: 'unknown message' });
@@ -225,35 +249,3 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     })();
     return true;
 });
-
-// ─────────────────────────────────────────────
-// Live stats (requires declarativeNetRequestFeedback — unpacked builds)
-// ─────────────────────────────────────────────
-const statsBuffer = { count: 0, domains: {} };
-let flushScheduled = false;
-
-async function flushStats() {
-    flushScheduled = false;
-    if (statsBuffer.count === 0) return;
-    const delta = statsBuffer.count;
-    const domains = statsBuffer.domains;
-    statsBuffer.count = 0;
-    statsBuffer.domains = {};
-    const { count = 0, domainStats = {} } = await chrome.storage.local.get(['count', 'domainStats']);
-    for (const [d, n] of Object.entries(domains)) {
-        domainStats[d] = (domainStats[d] || 0) + n;
-    }
-    await chrome.storage.local.set({ count: count + delta, domainStats });
-}
-
-if (chrome.declarativeNetRequest.onRuleMatchedDebug) {
-    chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((info) => {
-        statsBuffer.count += 1;
-        const d = extractDomain(info?.request?.url);
-        if (d) statsBuffer.domains[d] = (statsBuffer.domains[d] || 0) + 1;
-        if (!flushScheduled) {
-            flushScheduled = true;
-            setTimeout(flushStats, 1500);
-        }
-    });
-}

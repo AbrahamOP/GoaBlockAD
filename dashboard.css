@@ -401,19 +401,6 @@ body {
   box-shadow: var(--elev-1);
 }
 
-/* ─────────── Stat badge ─────────── */
-.stat-badge {
-  background: var(--primary-container);
-  color: var(--on-primary-container);
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--shape-full);
-  font-size: 1rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  min-width: 60px;
-  text-align: center;
-}
-
 /* ─────────── Filter lists tab ─────────── */
 .filter-stats-bar {
   display: flex;
@@ -622,8 +609,7 @@ body {
   color: var(--on-surface);
 }
 
-.whitelist-empty,
-.top-domains-empty {
+.whitelist-empty {
   background: transparent !important;
   color: var(--on-surface-variant) !important;
   font-style: italic;
@@ -646,58 +632,6 @@ body {
 
 .whitelist .btn-remove:hover {
   background: color-mix(in srgb, var(--error) 15%, transparent);
-}
-
-.top-domains {
-  list-style: none;
-  counter-reset: rank;
-  padding: 0;
-  margin: 0 0 var(--sp-4) 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-}
-
-.top-domains li {
-  counter-increment: rank;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
-  background: var(--surface-container-low);
-  border-radius: var(--shape-md);
-  font-size: 0.9rem;
-}
-
-.top-domains li::before {
-  content: counter(rank);
-  color: var(--primary);
-  font-weight: 700;
-  min-width: 1.5em;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.top-domains .dom-bar {
-  flex: 1;
-  height: 6px;
-  background: var(--surface-container-highest);
-  border-radius: var(--shape-full);
-  overflow: hidden;
-}
-
-.top-domains .dom-bar > span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--primary-container));
-}
-
-.top-domains .dom-count {
-  min-width: 4em;
-  text-align: right;
-  color: var(--on-surface-variant);
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
 }
 
 /* ─────────── About card ─────────── */

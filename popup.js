@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chrome.storage.onChanged.addListener((changes, namespace) => {
         if (namespace !== 'local') return;
-        if (changes.count) blockedCount.textContent = (changes.count.newValue || 0).toLocaleString('fr-FR');
         if (changes.whitelist) updateWhitelistButton(currentDomain, changes.whitelist.newValue || []);
         if (changes.pausedUntil || changes.enabled) {
             chrome.storage.local.get(['enabled', 'pausedUntil']).then(({ enabled: en = true, pausedUntil: pu = 0 }) => {
@@ -67,7 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDomainEl.textContent = currentDomain || 'Page système';
         if (!currentDomain) btnWhitelist.disabled = true;
 
-        const state = await chrome.storage.local.get(['enabled', 'cosmetic', 'count', 'whitelist', 'pausedUntil']);
+        // Opening the popup grants activeTab, which getMatchedRules needs for this tab.
+        if (currentTabId !== null) {
+            try {
+                const { rulesMatchedInfo } = await chrome.declarativeNetRequest.getMatchedRules({ tabId: currentTabId });
+                blockedCount.textContent = rulesMatchedInfo.length.toLocaleString('fr-FR');
+            } catch (err) {
+                console.warn('getMatchedRules failed', err);
+            }
+        }
+
+        const state = await chrome.storage.local.get(['enabled', 'cosmetic', 'whitelist', 'pausedUntil']);
         const enabled = state.enabled !== false;
         const cosmetic = state.cosmetic !== false;
         const whitelist = state.whitelist || [];
@@ -75,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         toggleProtection.checked = enabled;
         toggleCosmetic.checked = cosmetic;
-        blockedCount.textContent = (state.count || 0).toLocaleString('fr-FR');
         updateStatusText(enabled, pausedUntil);
         updateWhitelistButton(currentDomain, whitelist);
         updatePauseButtons(pausedUntil);
