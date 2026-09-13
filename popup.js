@@ -1,3 +1,6 @@
+// Allow-list rules use dynamic ids from 20000 (DYNAMIC_ALLOW_START in background.js)
+const ALLOW_RULE_MIN_ID = 20000;
+
 document.addEventListener('DOMContentLoaded', () => {
     const toggleProtection = document.getElementById('toggle-protection');
     const toggleCosmetic = document.getElementById('toggle-cosmetic');
@@ -70,7 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentTabId !== null) {
             try {
                 const { rulesMatchedInfo } = await chrome.declarativeNetRequest.getMatchedRules({ tabId: currentTabId });
-                blockedCount.textContent = rulesMatchedInfo.length.toLocaleString(uiLang);
+                // On an allowed site every request matches the allowAllRequests rule: those aren't blocks.
+                const blocked = rulesMatchedInfo.filter(m => !(m.rule.rulesetId === '_dynamic' && m.rule.ruleId >= ALLOW_RULE_MIN_ID));
+                blockedCount.textContent = blocked.length.toLocaleString(uiLang);
             } catch (err) {
                 console.warn('getMatchedRules failed', err);
             }
