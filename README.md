@@ -30,8 +30,10 @@ GoaBlockAD blocks ads at two levels: **network requests** are killed before they
 
 - **Network-level blocking** — Requests to Google Ads, Amazon, Criteo, Taboola, Outbrain, and 20+ ad networks are blocked before they reach your browser
 - **Cosmetic filtering** — Hides empty ad containers, sticky banners, and overlay placeholders that survive network blocking
-- **Real-time stats** — Live counter of blocked ads in the extension badge and popup
-- **Dashboard** — View blocked domains, manage filters, customize behavior
+- **Per-page counter** — The badge and popup show how many requests were blocked on the current page
+- **Allow list & pause** — Disable blocking on a site, or everywhere for 15 minutes
+- **Custom filters** — Block extra domains; invalid lines are reported instead of breaking the list
+- **Dashboard** — Manage settings, allowed sites and custom filters
 - **100% local** — Everything runs in your browser. Zero telemetry, zero external calls
 - **Lightweight** — No jQuery, no framework, just vanilla JS + CSS. Extension size under 200KB
 
@@ -70,7 +72,7 @@ Browser request → declarativeNetRequest rules (33 patterns)
                               content.js scans DOM
                               hides ad containers via content.css
                                   ↓
-                              badge counter updated
+                              badge shows the page's blocked count
 ```
 
 **Blocked networks include**: Google (doubleclick, googlesyndication, googleadservices), Amazon (amazon-adsystem), Facebook (facebook.com/tr), Criteo, Taboola, Outbrain, AppNexus, Rubicon, PubMatic, Index Exchange, and more.

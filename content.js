@@ -16,13 +16,22 @@ const adSelectors = [
     '.sponsored-content'
 ];
 
+const COSMETIC_STYLE_ID = 'goablockad-cosmetic-style';
+
+// Same matching as the background allow rules (requestDomains): the domain and its subdomains.
+function isWhitelisted(whitelist) {
+    const host = location.hostname.replace(/^www\./, '');
+    return (whitelist || []).some(d => host === d || host.endsWith('.' + d));
+}
+
 function applyCosmeticFiltering() {
-    // Check if filtering is enabled in storage
-    chrome.storage.local.get(['enabled', 'cosmetic'], (result) => {
-        if (result.enabled === false || result.cosmetic === false) return;
+    chrome.storage.local.get(['enabled', 'cosmetic', 'whitelist', 'pausedUntil'], (result) => {
+        document.getElementById(COSMETIC_STYLE_ID)?.remove();
+        const paused = result.pausedUntil && Date.now() < result.pausedUntil;
+        if (result.enabled === false || result.cosmetic === false || paused || isWhitelisted(result.whitelist)) return;
 
         const style = document.createElement('style');
-        style.id = 'goablockad-cosmetic-style';
+        style.id = COSMETIC_STYLE_ID;
         style.textContent = `
             ${adSelectors.join(',\n')} {
                 display: none !important;
@@ -34,21 +43,7 @@ function applyCosmeticFiltering() {
                 pointer-events: none !important;
             }
         `;
-
-        if (!document.getElementById('goablockad-cosmetic-style')) {
-            document.head.appendChild(style);
-            // console.log('GoaBlockAD: Cosmetic filtering applied');
-
-            // Increment counter for potential hides (simplified estimation)
-            // In a real scenario, we'd check how many elements actually matched.
-            const hiddenCount = document.querySelectorAll(adSelectors.join(',')).length;
-            if (hiddenCount > 0) {
-                chrome.storage.local.get(['count'], (result) => {
-                    const newCount = (result.count || 0) + hiddenCount;
-                    chrome.storage.local.set({ count: newCount });
-                });
-            }
-        }
+        (document.head || document.documentElement).appendChild(style);
     });
 }
 
@@ -57,9 +52,7 @@ applyCosmeticFiltering();
 
 // Re-apply if settings change
 chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'local' && (changes.enabled || changes.cosmetic)) {
-        const style = document.getElementById('goablockad-cosmetic-style');
-        if (style) style.remove();
+    if (namespace === 'local' && (changes.enabled || changes.cosmetic || changes.whitelist || changes.pausedUntil)) {
         applyCosmeticFiltering();
     }
 });

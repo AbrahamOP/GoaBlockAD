@@ -30,14 +30,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ──────────────────────────────────────────────
     const settingEnabled = document.getElementById('setting-enabled');
     const settingCosmetic = document.getElementById('setting-cosmetic');
-    const statsCount = document.getElementById('stats-count');
-    const btnResetCount = document.getElementById('btn-reset-count');
 
     // Load current settings
-    const { enabled = true, cosmetic = true, count = 0 } = await chrome.storage.local.get(['enabled', 'cosmetic', 'count']);
+    const { enabled = true, cosmetic = true } = await chrome.storage.local.get(['enabled', 'cosmetic']);
     settingEnabled.checked = enabled;
     settingCosmetic.checked = cosmetic;
-    statsCount.textContent = count.toLocaleString('fr-FR');
 
     // Toggle network protection — background.js handles the ruleset toggle via storage.onChanged
     settingEnabled.addEventListener('change', async (e) => {
@@ -52,19 +49,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast(e.target.checked ? 'Nettoyage cosmétique activé' : 'Nettoyage cosmétique désactivé');
     });
 
-    // Reset counter
-    btnResetCount.addEventListener('click', async () => {
-        await chrome.storage.local.set({ count: 0 });
-        statsCount.textContent = '0';
-        showToast('Compteur réinitialisé');
-    });
-
-    // Live count update
-    chrome.storage.onChanged.addListener((changes, namespace) => {
-        if (namespace === 'local' && changes.count) {
-            statsCount.textContent = (changes.count.newValue || 0).toLocaleString('fr-FR');
-        }
-    });
 
     // ──────────────────────────────────────────────
     // Filter Lists Tab
@@ -151,12 +135,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         customCount.textContent = `${lines.length} règle(s) personnalisée(s)`;
     }
 
-    // Save custom filters — background.js rebuilds the dynamic rules via storage.onChanged
+    // Save custom filters — background.js stores them and rebuilds the dynamic rules
     btnCustomSave.addEventListener('click', async () => {
-        const raw = customTextarea.value;
-        await chrome.storage.local.set({ customFilters: raw });
-        const lineCount = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('#')).length;
-        showToast(`${lineCount} filtre(s) personnalisé(s) appliqué(s)`);
+        const res = await chrome.runtime.sendMessage({ type: 'saveCustomFilters', raw: customTextarea.value });
+        if (!res?.ok) return showToast(`Erreur : ${res?.error || 'règles non appliquées'}`);
+        let msg = `${res.count} filtre(s) personnalisé(s) appliqué(s)`;
+        if (res.rejected.length) msg += ` — ${res.rejected.length} invalide(s) ignoré(s) : ${res.rejected.slice(0, 3).join(', ')}`;
+        if (res.truncated) msg += ` — ${res.truncated} au-delà de la limite de 5000`;
+        showToast(msg);
     });
 
     // Cancel – reload saved filters
@@ -168,12 +154,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // ──────────────────────────────────────────────
-    // Sites & Stats Tab
+    // Sites Tab
     // ──────────────────────────────────────────────
     const whitelistEl = document.getElementById('whitelist-list');
-    const topDomainsEl = document.getElementById('top-domains');
-    const domainStatsCount = document.getElementById('domain-stats-count');
-    const btnResetDomainStats = document.getElementById('btn-reset-domain-stats');
 
     async function renderWhitelist() {
         const { whitelist = [] } = await chrome.storage.local.get('whitelist');
@@ -201,53 +184,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    async function renderTopDomains() {
-        const { domainStats = {} } = await chrome.storage.local.get('domainStats');
-        const entries = Object.entries(domainStats).sort((a, b) => b[1] - a[1]).slice(0, 15);
-        topDomainsEl.innerHTML = '';
-        domainStatsCount.textContent = `${Object.keys(domainStats).length} domaine(s)`;
-        if (entries.length === 0) {
-            const li = document.createElement('li');
-            li.className = 'top-domains-empty';
-            li.textContent = 'Pas encore de données.';
-            topDomainsEl.appendChild(li);
-            return;
-        }
-        const max = entries[0][1];
-        entries.forEach(([domain, n]) => {
-            const li = document.createElement('li');
-            const name = document.createElement('span');
-            name.textContent = domain;
-            name.style.minWidth = '0';
-            name.style.overflow = 'hidden';
-            name.style.textOverflow = 'ellipsis';
-            name.style.whiteSpace = 'nowrap';
-            name.style.flex = '0 0 40%';
-            const bar = document.createElement('div');
-            bar.className = 'dom-bar';
-            const fill = document.createElement('span');
-            fill.style.width = Math.round((n / max) * 100) + '%';
-            bar.appendChild(fill);
-            const count = document.createElement('span');
-            count.className = 'dom-count';
-            count.textContent = n.toLocaleString('fr-FR');
-            li.append(name, bar, count);
-            topDomainsEl.appendChild(li);
-        });
-    }
 
     renderWhitelist();
-    renderTopDomains();
-
-    btnResetDomainStats.addEventListener('click', async () => {
-        await chrome.runtime.sendMessage({ type: 'resetDomainStats' });
-        showToast('Stats par domaine réinitialisées');
-    });
 
     chrome.storage.onChanged.addListener((changes, namespace) => {
         if (namespace !== 'local') return;
         if (changes.whitelist) renderWhitelist();
-        if (changes.domainStats) renderTopDomains();
     });
 
     // ──────────────────────────────────────────────

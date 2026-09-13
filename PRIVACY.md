@@ -14,13 +14,11 @@ Les données suivantes sont stockées **uniquement** dans `chrome.storage.local`
 | Donnée | Pourquoi | Partagée ? |
 |---|---|---|
 | Préférences on/off (blocage réseau, cosmétique) | Conserver votre configuration | Non |
-| Compteur de publicités bloquées | Affichage statistique dans le popup | Non |
 | Liste de filtres personnalisés (domaines saisis par vous) | Construire des règles `declarativeNetRequest` locales | Non |
 | Whitelist de sites autorisés | Désactiver le blocage sur les sites choisis | Non |
-| Top domaines bloqués | Affichage dans le dashboard | Non |
 | État de pause (`pausedUntil`) | Pause temporaire de la protection | Non |
 
-Ces données **ne quittent jamais votre navigateur**. Elles peuvent être effacées à tout moment via la désinstallation de l'extension ou le bouton *Réinitialiser* du dashboard.
+Ces données **ne quittent jamais votre navigateur**. Elles peuvent être effacées à tout moment via la désinstallation de l'extension.
 
 ## Permissions et justification
 
@@ -29,7 +27,7 @@ Ces données **ne quittent jamais votre navigateur**. Elles peuvent être effac�
 | `declarativeNetRequest` | Bloquer les requêtes publicitaires via des règles statiques et dynamiques. |
 | `storage` | Enregistrer localement les préférences listées ci-dessus. |
 | `alarms` | Reprendre automatiquement le blocage après une pause temporaire. |
-| `activeTab` | Lire le domaine de l'onglet actif **uniquement quand vous cliquez sur l'icône** (pour proposer le bouton « Autoriser ici »). |
+| `activeTab` | Lire le domaine de l'onglet actif **uniquement quand vous cliquez sur l'icône** (pour proposer le bouton « Autoriser ici » et afficher le nombre de requêtes bloquées sur cette page, compté par Chrome). |
 | `host_permissions: <all_urls>` | Appliquer les règles de blocage réseau et le nettoyage cosmétique sur tous les sites que vous visitez. Aucune donnée de navigation n'est lue, transmise ou stockée. |
 
 ## Ce que nous ne faisons PAS

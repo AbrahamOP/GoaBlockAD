@@ -19,7 +19,7 @@
       </div>
       <nav class="tabs">
         <button class="tab active" data-tab="settings">Paramètres</button>
-        <button class="tab" data-tab="sites">Sites & Stats</button>
+        <button class="tab" data-tab="sites">Sites autorisés</button>
         <button class="tab" data-tab="filter-lists">Listes de filtres</button>
         <button class="tab" data-tab="custom-filters">Filtres personnalisés</button>
         <button class="tab" data-tab="about">À propos</button>
@@ -54,26 +54,9 @@
         </div>
       </div>
 
-      <div class="section-card">
-        <h2>Statistiques</h2>
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-label">Publicités bloquées</span>
-            <span class="setting-desc">Nombre total de publicités bloquées depuis l'installation.</span>
-          </div>
-          <span class="stat-badge" id="stats-count">0</span>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-label">Réinitialiser le compteur</span>
-            <span class="setting-desc">Remet le compteur de publicités bloquées à zéro.</span>
-          </div>
-          <button class="btn btn-danger" id="btn-reset-count">Réinitialiser</button>
-        </div>
-      </div>
     </section>
 
-    <!-- Tab: Sites & Stats -->
+    <!-- Tab: Sites autorisés -->
     <section id="tab-sites" class="tab-content">
       <div class="section-card">
         <h2>Sites autorisés</h2>
@@ -84,17 +67,6 @@
         </ul>
       </div>
 
-      <div class="section-card">
-        <h2>Top domaines bloqués</h2>
-        <p class="section-desc">Classement des domaines les plus souvent bloqués depuis l'installation.</p>
-        <ol class="top-domains" id="top-domains">
-          <li class="top-domains-empty">Pas encore de données.</li>
-        </ol>
-        <div class="custom-actions">
-          <span class="custom-count" id="domain-stats-count">0 domaine(s)</span>
-          <button class="btn btn-danger" id="btn-reset-domain-stats">Réinitialiser les stats</button>
-        </div>
-      </div>
     </section>
 
     <!-- Tab: Listes de filtres -->
@@ -300,8 +272,8 @@
     <section id="tab-custom-filters" class="tab-content">
       <div class="section-card">
         <h2>Domaines personnalisés à bloquer</h2>
-        <p class="section-desc">Ajoutez un domaine par ligne. Ces règles seront appliquées en plus des listes de filtres
-          activées.</p>
+        <p class="section-desc">Ajoutez un domaine par ligne (sous-domaines inclus). Les lignes commençant par # sont
+          ignorées.</p>
         <textarea id="custom-filters-textarea" class="custom-textarea"
           placeholder="exemple.com&#10;pub.example.org&#10;tracking.site.net" rows="14"></textarea>
         <div class="custom-actions">
