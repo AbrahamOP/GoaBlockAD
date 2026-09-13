@@ -1,0 +1,195 @@
+{
+  "langCode": {
+    "message": "de",
+    "description": "BCP 47 code of this translation, used for <html lang> and number formatting."
+  },
+  "extDescription": {
+    "message": "Einfacher, wirksamer Werbeblocker: blockiert Werbung und Tracker, blendet Werbeflächen aus und entfernt YouTube-Werbung."
+  },
+  "settings": {
+    "message": "Einstellungen"
+  },
+  "openSettings": {
+    "message": "Einstellungen öffnen"
+  },
+  "protection": {
+    "message": "Schutz"
+  },
+  "statusActive": {
+    "message": "AKTIV"
+  },
+  "statusPaused": {
+    "message": "PAUSIERT"
+  },
+  "statusInactive": {
+    "message": "AUS"
+  },
+  "blockedOnPage": {
+    "message": "auf dieser Seite blockiert"
+  },
+  "networkBlocking": {
+    "message": "Netzwerkblockierung"
+  },
+  "networkBlockingShortDesc": {
+    "message": "Schaltet alle Blockierregeln ein oder aus."
+  },
+  "networkBlockingDesc": {
+    "message": "Blockiert Werbeanfragen auf Netzwerkebene mit declarativeNetRequest-Regeln."
+  },
+  "visualCleanup": {
+    "message": "Visuelle Bereinigung"
+  },
+  "visualCleanupShortDesc": {
+    "message": "Blendet verbleibende Werbeflächen aus."
+  },
+  "visualCleanupDesc": {
+    "message": "Blendet verbleibende Werbeelemente aus (Banner, Werbeflächen, iframes)."
+  },
+  "currentSite": {
+    "message": "Aktuelle Seite"
+  },
+  "systemPage": {
+    "message": "Systemseite"
+  },
+  "allowHereHelpLabel": {
+    "message": "Hilfe: Was bewirkt „Hier erlauben“?"
+  },
+  "allowHere": {
+    "message": "Hier erlauben"
+  },
+  "allowHereHelp": {
+    "message": "fügt die Seite der Ausnahmeliste hinzu: Auf dieser Domain wird keine Werbung blockiert. Nützlich, um eine Seite zu unterstützen oder defekte Inhalte zu reparieren."
+  },
+  "allowedHere": {
+    "message": "✓ Hier erlaubt"
+  },
+  "unavailable": {
+    "message": "Nicht verfügbar"
+  },
+  "pause15": {
+    "message": "15 Min. pausieren"
+  },
+  "resume": {
+    "message": "Fortsetzen"
+  },
+  "resumeIn": {
+    "message": "Fortsetzen ($1 Min.)"
+  },
+  "tagline": {
+    "message": "Leichtes Surfen ohne Werbung."
+  },
+  "dashboardTitle": {
+    "message": "GoaBlockAD — Einstellungen"
+  },
+  "tabAllowedSites": {
+    "message": "Erlaubte Seiten"
+  },
+  "tabFilterLists": {
+    "message": "Filterlisten"
+  },
+  "tabCustomFilters": {
+    "message": "Eigene Filter"
+  },
+  "tabAbout": {
+    "message": "Über"
+  },
+  "allowedSitesDesc": {
+    "message": "Auf den hier aufgeführten Domains ist die Blockierung aus. Mit „Hier erlauben“ im Pop-up fügst du eine hinzu."
+  },
+  "noAllowedSites": {
+    "message": "Keine erlaubten Seiten."
+  },
+  "remove": {
+    "message": "Entfernen"
+  },
+  "removedFromAllowList": {
+    "message": "$1 aus der Ausnahmeliste entfernt"
+  },
+  "activeLists": {
+    "message": "Aktive Listen: $1"
+  },
+  "findLists": {
+    "message": "Listen suchen…"
+  },
+  "catDefault": {
+    "message": "Standard"
+  },
+  "catAds": {
+    "message": "Werbung"
+  },
+  "catPrivacy": {
+    "message": "Datenschutz"
+  },
+  "catSecurity": {
+    "message": "Schutz vor Schadsoftware, Sicherheit"
+  },
+  "catAnnoyances": {
+    "message": "Störelemente"
+  },
+  "catMisc": {
+    "message": "Sonstiges"
+  },
+  "catRegions": {
+    "message": "Regionen, Sprachen"
+  },
+  "customTitle": {
+    "message": "Eigene Domains zum Blockieren"
+  },
+  "customDesc": {
+    "message": "Eine Domain pro Zeile (Subdomains inklusive). Zeilen, die mit # beginnen, werden ignoriert."
+  },
+  "customPlaceholder": {
+    "message": "beispiel.de\nwerbung.beispiel.org\ntracking.seite.net"
+  },
+  "customRuleCount": {
+    "message": "Eigene Regeln: $1"
+  },
+  "cancel": {
+    "message": "Abbrechen"
+  },
+  "applyChanges": {
+    "message": "Änderungen übernehmen"
+  },
+  "aboutDesc": {
+    "message": "Eine einfache, wirksame Erweiterung, die Werbung blockiert und deine Privatsphäre im Netz schützt."
+  },
+  "sourceOnGitHub": {
+    "message": "Quellcode auf GitHub"
+  },
+  "version": {
+    "message": "Version $1"
+  },
+  "toastNetworkOn": {
+    "message": "Netzwerkblockierung an"
+  },
+  "toastNetworkOff": {
+    "message": "Netzwerkblockierung aus"
+  },
+  "toastCleanupOn": {
+    "message": "Visuelle Bereinigung an"
+  },
+  "toastCleanupOff": {
+    "message": "Visuelle Bereinigung aus"
+  },
+  "toastListsUpdated": {
+    "message": "Filterlisten aktualisiert"
+  },
+  "toastCustomApplied": {
+    "message": "Eigene Filter übernommen: $1"
+  },
+  "toastCustomRejected": {
+    "message": "ungültige Zeilen ignoriert: $1 ($2)"
+  },
+  "toastCustomTruncated": {
+    "message": "über dem Limit von 5000: $1"
+  },
+  "toastError": {
+    "message": "Fehler: $1"
+  },
+  "toastRulesNotApplied": {
+    "message": "Regeln nicht übernommen"
+  },
+  "toastCancelled": {
+    "message": "Änderungen verworfen"
+  }
+}

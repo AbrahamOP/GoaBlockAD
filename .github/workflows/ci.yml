@@ -18,9 +18,12 @@ jobs:
 
       - name: Check JS syntax
         run: |
-          for f in background.js content.js popup.js dashboard.js youtube.js youtube-inject.js; do
+          for f in background.js content.js popup.js dashboard.js youtube.js youtube-inject.js i18n.js .github/scripts/check-i18n.js; do
             node --check "$f"
           done
+
+      - name: Check translations
+        run: node .github/scripts/check-i18n.js
 
       - name: Verify manifest references existing files
         run: |
@@ -31,6 +34,7 @@ jobs:
             const check = (p) => { if (p && !fs.existsSync(p)) missing.push(p); };
             check(m.background?.service_worker);
             check(m.options_page);
+            if (m.default_locale) check('_locales/' + m.default_locale + '/messages.json');
             check(m.action?.default_popup);
             for (const cs of m.content_scripts || []) {
               (cs.js || []).forEach(check);
