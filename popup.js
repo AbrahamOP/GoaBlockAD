@@ -63,14 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.warn('tabs.query failed', err);
         }
-        currentDomainEl.textContent = currentDomain || 'Page système';
+        currentDomainEl.textContent = currentDomain || t('systemPage');
         if (!currentDomain) btnWhitelist.disabled = true;
 
         // Opening the popup grants activeTab, which getMatchedRules needs for this tab.
         if (currentTabId !== null) {
             try {
                 const { rulesMatchedInfo } = await chrome.declarativeNetRequest.getMatchedRules({ tabId: currentTabId });
-                blockedCount.textContent = rulesMatchedInfo.length.toLocaleString('fr-FR');
+                blockedCount.textContent = rulesMatchedInfo.length.toLocaleString(uiLang);
             } catch (err) {
                 console.warn('getMatchedRules failed', err);
             }
@@ -93,18 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const isPaused = pu && Date.now() < pu;
         hero.classList.toggle('paused', !!isPaused);
         hero.classList.toggle('off', !en && !isPaused);
-        if (isPaused) statusState.textContent = 'PAUSE';
-        else if (en) statusState.textContent = 'ACTIVE';
-        else statusState.textContent = 'INACTIVE';
+        if (isPaused) statusState.textContent = t('statusPaused');
+        else if (en) statusState.textContent = t('statusActive');
+        else statusState.textContent = t('statusInactive');
     }
 
     function updateWhitelistButton(domain, list) {
         if (!domain) {
-            btnWhitelist.textContent = 'Indisponible';
+            btnWhitelist.textContent = t('unavailable');
             return;
         }
         const allowed = list.includes(domain);
-        btnWhitelist.textContent = allowed ? '✓ Autorisé ici' : 'Autoriser ici';
+        btnWhitelist.textContent = allowed ? t('allowedHere') : t('allowHere');
         btnWhitelist.classList.toggle('active', allowed);
     }
 
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnResume.hidden = !isPaused;
         if (isPaused) {
             const mins = Math.ceil((pu - Date.now()) / 60000);
-            btnResume.innerHTML = `<svg class="chip-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>Reprendre (${mins} min)`;
+            document.getElementById('resume-label').textContent = t('resumeIn', mins);
         }
     }
 

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ──────────────────────────────────────────────
     const versionEl = document.getElementById('about-version');
     if (versionEl && chrome.runtime?.getManifest) {
-        versionEl.textContent = `Version ${chrome.runtime.getManifest().version}`;
+        versionEl.textContent = t('version', chrome.runtime.getManifest().version);
     }
 
     // ──────────────────────────────────────────────
@@ -40,13 +40,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     settingEnabled.addEventListener('change', async (e) => {
         const isEnabled = e.target.checked;
         await chrome.storage.local.set({ enabled: isEnabled });
-        showToast(isEnabled ? 'Blocage réseau activé' : 'Blocage réseau désactivé');
+        showToast(isEnabled ? t('toastNetworkOn') : t('toastNetworkOff'));
     });
 
     // Toggle cosmetic filtering
     settingCosmetic.addEventListener('change', async (e) => {
         await chrome.storage.local.set({ cosmetic: e.target.checked });
-        showToast(e.target.checked ? 'Nettoyage cosmétique activé' : 'Nettoyage cosmétique désactivé');
+        showToast(e.target.checked ? t('toastCleanupOn') : t('toastCleanupOff'));
     });
 
 
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await chrome.storage.local.set({ filterStates: states });
             updateCategoryCounts();
             updateRuleCount();
-            showToast('Listes de filtres mises à jour');
+            showToast(t('toastListsUpdated'));
         });
     });
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateRuleCount() {
         const checked = document.querySelectorAll('.filter-item input:checked').length;
-        document.getElementById('filter-rule-count').textContent = `${checked} liste(s) active(s)`;
+        document.getElementById('filter-rule-count').textContent = t('activeLists', checked);
     }
 
     // ──────────────────────────────────────────────
@@ -132,16 +132,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateCustomCount() {
         const lines = customTextarea.value.split('\n').filter(l => l.trim().length > 0);
-        customCount.textContent = `${lines.length} règle(s) personnalisée(s)`;
+        customCount.textContent = t('customRuleCount', lines.length);
     }
 
     // Save custom filters — background.js stores them and rebuilds the dynamic rules
     btnCustomSave.addEventListener('click', async () => {
         const res = await chrome.runtime.sendMessage({ type: 'saveCustomFilters', raw: customTextarea.value });
-        if (!res?.ok) return showToast(`Erreur : ${res?.error || 'règles non appliquées'}`);
-        let msg = `${res.count} filtre(s) personnalisé(s) appliqué(s)`;
-        if (res.rejected.length) msg += ` — ${res.rejected.length} invalide(s) ignoré(s) : ${res.rejected.slice(0, 3).join(', ')}`;
-        if (res.truncated) msg += ` — ${res.truncated} au-delà de la limite de 5000`;
+        if (!res?.ok) return showToast(t('toastError', res?.error || t('toastRulesNotApplied')));
+        let msg = t('toastCustomApplied', res.count);
+        if (res.rejected.length) msg += ' — ' + t('toastCustomRejected', res.rejected.length, res.rejected.slice(0, 3).join(', '));
+        if (res.truncated) msg += ' — ' + t('toastCustomTruncated', res.truncated);
         showToast(msg);
     });
 
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { customFilters: saved = '' } = await chrome.storage.local.get('customFilters');
         customTextarea.value = saved;
         updateCustomCount();
-        showToast('Modifications annulées');
+        showToast(t('toastCancelled'));
     });
 
     // ──────────────────────────────────────────────
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (whitelist.length === 0) {
             const li = document.createElement('li');
             li.className = 'whitelist-empty';
-            li.textContent = 'Aucun site autorisé.';
+            li.textContent = t('noAllowedSites');
             whitelistEl.appendChild(li);
             return;
         }
@@ -174,10 +174,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             label.textContent = domain;
             const btn = document.createElement('button');
             btn.className = 'btn-remove';
-            btn.textContent = 'Retirer';
+            btn.textContent = t('remove');
             btn.addEventListener('click', async () => {
                 await chrome.runtime.sendMessage({ type: 'toggleWhitelist', domain });
-                showToast(`${domain} retiré de la whitelist`);
+                showToast(t('removedFromAllowList', domain));
             });
             li.append(label, btn);
             whitelistEl.appendChild(li);

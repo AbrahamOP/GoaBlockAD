@@ -1,0 +1,195 @@
+{
+  "langCode": {
+    "message": "it",
+    "description": "BCP 47 code of this translation, used for <html lang> and number formatting."
+  },
+  "extDescription": {
+    "message": "Blocco pubblicità semplice ed efficace: blocca annunci e tracker, nasconde gli spazi pubblicitari e rimuove quelli di YouTube."
+  },
+  "settings": {
+    "message": "Impostazioni"
+  },
+  "openSettings": {
+    "message": "Apri impostazioni"
+  },
+  "protection": {
+    "message": "Protezione"
+  },
+  "statusActive": {
+    "message": "ATTIVA"
+  },
+  "statusPaused": {
+    "message": "IN PAUSA"
+  },
+  "statusInactive": {
+    "message": "DISATTIVATA"
+  },
+  "blockedOnPage": {
+    "message": "bloccati in questa pagina"
+  },
+  "networkBlocking": {
+    "message": "Blocco di rete"
+  },
+  "networkBlockingShortDesc": {
+    "message": "Attiva tutte le regole di blocco."
+  },
+  "networkBlockingDesc": {
+    "message": "Blocca le richieste pubblicitarie a livello di rete con regole declarativeNetRequest."
+  },
+  "visualCleanup": {
+    "message": "Pulizia visiva"
+  },
+  "visualCleanupShortDesc": {
+    "message": "Nasconde gli spazi pubblicitari rimasti."
+  },
+  "visualCleanupDesc": {
+    "message": "Nasconde gli elementi pubblicitari rimasti (banner, spazi, iframe)."
+  },
+  "currentSite": {
+    "message": "Sito attuale"
+  },
+  "systemPage": {
+    "message": "Pagina di sistema"
+  },
+  "allowHereHelpLabel": {
+    "message": "Aiuto: a cosa serve Consenti qui?"
+  },
+  "allowHere": {
+    "message": "Consenti qui"
+  },
+  "allowHereHelp": {
+    "message": "aggiunge il sito alla lista consentiti: su questo dominio non verrà bloccata alcuna pubblicità. Utile per sostenere un sito o sbloccare contenuti che non funzionano."
+  },
+  "allowedHere": {
+    "message": "✓ Consentito qui"
+  },
+  "unavailable": {
+    "message": "Non disponibile"
+  },
+  "pause15": {
+    "message": "Pausa 15 min"
+  },
+  "resume": {
+    "message": "Riprendi"
+  },
+  "resumeIn": {
+    "message": "Riprendi ($1 min)"
+  },
+  "tagline": {
+    "message": "Navigazione leggera e senza pubblicità."
+  },
+  "dashboardTitle": {
+    "message": "GoaBlockAD — Impostazioni"
+  },
+  "tabAllowedSites": {
+    "message": "Siti consentiti"
+  },
+  "tabFilterLists": {
+    "message": "Liste di filtri"
+  },
+  "tabCustomFilters": {
+    "message": "Filtri personalizzati"
+  },
+  "tabAbout": {
+    "message": "Informazioni"
+  },
+  "allowedSitesDesc": {
+    "message": "Il blocco è disattivato sui domini elencati qui. Usa «Consenti qui» nel popup per aggiungerne uno."
+  },
+  "noAllowedSites": {
+    "message": "Nessun sito consentito."
+  },
+  "remove": {
+    "message": "Rimuovi"
+  },
+  "removedFromAllowList": {
+    "message": "$1 rimosso dalla lista consentiti"
+  },
+  "activeLists": {
+    "message": "Liste attive: $1"
+  },
+  "findLists": {
+    "message": "Cerca liste…"
+  },
+  "catDefault": {
+    "message": "Predefinite"
+  },
+  "catAds": {
+    "message": "Pubblicità"
+  },
+  "catPrivacy": {
+    "message": "Privacy"
+  },
+  "catSecurity": {
+    "message": "Protezione dai malware, sicurezza"
+  },
+  "catAnnoyances": {
+    "message": "Elementi fastidiosi"
+  },
+  "catMisc": {
+    "message": "Varie"
+  },
+  "catRegions": {
+    "message": "Regioni, lingue"
+  },
+  "customTitle": {
+    "message": "Domini personalizzati da bloccare"
+  },
+  "customDesc": {
+    "message": "Un dominio per riga (sottodomini inclusi). Le righe che iniziano con # vengono ignorate."
+  },
+  "customPlaceholder": {
+    "message": "esempio.it\npubblicita.esempio.org\ntracking.sito.net"
+  },
+  "customRuleCount": {
+    "message": "Regole personalizzate: $1"
+  },
+  "cancel": {
+    "message": "Annulla"
+  },
+  "applyChanges": {
+    "message": "Applica modifiche"
+  },
+  "aboutDesc": {
+    "message": "Un'estensione semplice ed efficace per bloccare la pubblicità e proteggere la tua privacy online."
+  },
+  "sourceOnGitHub": {
+    "message": "Codice sorgente su GitHub"
+  },
+  "version": {
+    "message": "Versione $1"
+  },
+  "toastNetworkOn": {
+    "message": "Blocco di rete attivato"
+  },
+  "toastNetworkOff": {
+    "message": "Blocco di rete disattivato"
+  },
+  "toastCleanupOn": {
+    "message": "Pulizia visiva attivata"
+  },
+  "toastCleanupOff": {
+    "message": "Pulizia visiva disattivata"
+  },
+  "toastListsUpdated": {
+    "message": "Liste di filtri aggiornate"
+  },
+  "toastCustomApplied": {
+    "message": "Filtri personalizzati applicati: $1"
+  },
+  "toastCustomRejected": {
+    "message": "righe non valide ignorate: $1 ($2)"
+  },
+  "toastCustomTruncated": {
+    "message": "oltre il limite di 5000: $1"
+  },
+  "toastError": {
+    "message": "Errore: $1"
+  },
+  "toastRulesNotApplied": {
+    "message": "regole non applicate"
+  },
+  "toastCancelled": {
+    "message": "Modifiche annullate"
+  }
+}

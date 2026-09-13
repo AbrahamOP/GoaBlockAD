@@ -34,6 +34,7 @@ GoaBlockAD blocks ads at two levels: **network requests** are killed before they
 - **Allow list & pause** — Disable blocking on a site, or everywhere for 15 minutes
 - **Custom filters** — Block extra domains; invalid lines are reported instead of breaking the list
 - **Dashboard** — Manage settings, allowed sites and custom filters
+- **Multilingual** — English, French, Spanish, German, Italian and Brazilian Portuguese, following the browser language
 - **100% local** — Everything runs in your browser. Zero telemetry, zero external calls
 - **Lightweight** — No jQuery, no framework, just vanilla JS + CSS. Extension size under 200KB
 

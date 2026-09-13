@@ -1,0 +1,195 @@
+{
+  "langCode": {
+    "message": "en",
+    "description": "BCP 47 code of this translation, used for <html lang> and number formatting."
+  },
+  "extDescription": {
+    "message": "Simple, effective ad blocker: blocks ad and tracker requests, hides leftover ad slots and removes YouTube ads."
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "openSettings": {
+    "message": "Open settings"
+  },
+  "protection": {
+    "message": "Protection"
+  },
+  "statusActive": {
+    "message": "ACTIVE"
+  },
+  "statusPaused": {
+    "message": "PAUSED"
+  },
+  "statusInactive": {
+    "message": "OFF"
+  },
+  "blockedOnPage": {
+    "message": "blocked on this page"
+  },
+  "networkBlocking": {
+    "message": "Network blocking"
+  },
+  "networkBlockingShortDesc": {
+    "message": "Turns all blocking rules on or off."
+  },
+  "networkBlockingDesc": {
+    "message": "Blocks ad requests at the network level with declarativeNetRequest rules."
+  },
+  "visualCleanup": {
+    "message": "Visual cleanup"
+  },
+  "visualCleanupShortDesc": {
+    "message": "Hides leftover ad slots."
+  },
+  "visualCleanupDesc": {
+    "message": "Hides leftover ad elements (banners, slots, iframes)."
+  },
+  "currentSite": {
+    "message": "Current site"
+  },
+  "systemPage": {
+    "message": "System page"
+  },
+  "allowHereHelpLabel": {
+    "message": "Help: what does Allow here do?"
+  },
+  "allowHere": {
+    "message": "Allow here"
+  },
+  "allowHereHelp": {
+    "message": "adds the site to the allow list: no ad blocking will apply on this domain. Useful to support a site or fix broken content."
+  },
+  "allowedHere": {
+    "message": "✓ Allowed here"
+  },
+  "unavailable": {
+    "message": "Unavailable"
+  },
+  "pause15": {
+    "message": "Pause 15 min"
+  },
+  "resume": {
+    "message": "Resume"
+  },
+  "resumeIn": {
+    "message": "Resume ($1 min)"
+  },
+  "tagline": {
+    "message": "Light, ad-free browsing."
+  },
+  "dashboardTitle": {
+    "message": "GoaBlockAD — Settings"
+  },
+  "tabAllowedSites": {
+    "message": "Allowed sites"
+  },
+  "tabFilterLists": {
+    "message": "Filter lists"
+  },
+  "tabCustomFilters": {
+    "message": "Custom filters"
+  },
+  "tabAbout": {
+    "message": "About"
+  },
+  "allowedSitesDesc": {
+    "message": "Blocking is turned off on the domains listed here. Use “Allow here” in the popup to add one."
+  },
+  "noAllowedSites": {
+    "message": "No allowed sites."
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "removedFromAllowList": {
+    "message": "$1 removed from the allow list"
+  },
+  "activeLists": {
+    "message": "Active lists: $1"
+  },
+  "findLists": {
+    "message": "Find lists…"
+  },
+  "catDefault": {
+    "message": "Default"
+  },
+  "catAds": {
+    "message": "Ads"
+  },
+  "catPrivacy": {
+    "message": "Privacy"
+  },
+  "catSecurity": {
+    "message": "Malware protection, security"
+  },
+  "catAnnoyances": {
+    "message": "Annoyances"
+  },
+  "catMisc": {
+    "message": "Miscellaneous"
+  },
+  "catRegions": {
+    "message": "Regions, languages"
+  },
+  "customTitle": {
+    "message": "Custom domains to block"
+  },
+  "customDesc": {
+    "message": "One domain per line (subdomains included). Lines starting with # are ignored."
+  },
+  "customPlaceholder": {
+    "message": "example.com\nads.example.org\ntracking.site.net"
+  },
+  "customRuleCount": {
+    "message": "Custom rules: $1"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "applyChanges": {
+    "message": "Apply changes"
+  },
+  "aboutDesc": {
+    "message": "A simple, effective extension to block ads and protect your privacy online."
+  },
+  "sourceOnGitHub": {
+    "message": "Source code on GitHub"
+  },
+  "version": {
+    "message": "Version $1"
+  },
+  "toastNetworkOn": {
+    "message": "Network blocking on"
+  },
+  "toastNetworkOff": {
+    "message": "Network blocking off"
+  },
+  "toastCleanupOn": {
+    "message": "Visual cleanup on"
+  },
+  "toastCleanupOff": {
+    "message": "Visual cleanup off"
+  },
+  "toastListsUpdated": {
+    "message": "Filter lists updated"
+  },
+  "toastCustomApplied": {
+    "message": "Custom filters applied: $1"
+  },
+  "toastCustomRejected": {
+    "message": "invalid lines ignored: $1 ($2)"
+  },
+  "toastCustomTruncated": {
+    "message": "over the 5000 limit: $1"
+  },
+  "toastError": {
+    "message": "Error: $1"
+  },
+  "toastRulesNotApplied": {
+    "message": "rules not applied"
+  },
+  "toastCancelled": {
+    "message": "Changes discarded"
+  }
+}

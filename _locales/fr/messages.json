@@ -1,0 +1,195 @@
+{
+  "langCode": {
+    "message": "fr",
+    "description": "BCP 47 code of this translation, used for <html lang> and number formatting."
+  },
+  "extDescription": {
+    "message": "Bloqueur de pubs simple et efficace : bloque pubs et traqueurs, masque les encarts restants et retire les pubs YouTube."
+  },
+  "settings": {
+    "message": "Paramètres"
+  },
+  "openSettings": {
+    "message": "Ouvrir les paramètres"
+  },
+  "protection": {
+    "message": "Protection"
+  },
+  "statusActive": {
+    "message": "ACTIVE"
+  },
+  "statusPaused": {
+    "message": "EN PAUSE"
+  },
+  "statusInactive": {
+    "message": "INACTIVE"
+  },
+  "blockedOnPage": {
+    "message": "bloquées sur cette page"
+  },
+  "networkBlocking": {
+    "message": "Blocage réseau"
+  },
+  "networkBlockingShortDesc": {
+    "message": "Active toutes les règles de blocage."
+  },
+  "networkBlockingDesc": {
+    "message": "Bloque les requêtes publicitaires au niveau réseau via les règles declarativeNetRequest."
+  },
+  "visualCleanup": {
+    "message": "Nettoyage visuel"
+  },
+  "visualCleanupShortDesc": {
+    "message": "Masque les emplacements publicitaires restants."
+  },
+  "visualCleanupDesc": {
+    "message": "Masque les éléments visuels publicitaires restants (bannières, encarts, iframes)."
+  },
+  "currentSite": {
+    "message": "Site actuel"
+  },
+  "systemPage": {
+    "message": "Page système"
+  },
+  "allowHereHelpLabel": {
+    "message": "Aide : à quoi sert Autoriser ici ?"
+  },
+  "allowHere": {
+    "message": "Autoriser ici"
+  },
+  "allowHereHelp": {
+    "message": "ajoute le site à la liste blanche : aucun blocage publicitaire ne s'appliquera sur ce domaine. Utile pour soutenir un site ou débloquer un contenu cassé."
+  },
+  "allowedHere": {
+    "message": "✓ Autorisé ici"
+  },
+  "unavailable": {
+    "message": "Indisponible"
+  },
+  "pause15": {
+    "message": "Pause 15 min"
+  },
+  "resume": {
+    "message": "Reprendre"
+  },
+  "resumeIn": {
+    "message": "Reprendre ($1 min)"
+  },
+  "tagline": {
+    "message": "Navigation légère et sans pub."
+  },
+  "dashboardTitle": {
+    "message": "GoaBlockAD — Paramètres"
+  },
+  "tabAllowedSites": {
+    "message": "Sites autorisés"
+  },
+  "tabFilterLists": {
+    "message": "Listes de filtres"
+  },
+  "tabCustomFilters": {
+    "message": "Filtres personnalisés"
+  },
+  "tabAbout": {
+    "message": "À propos"
+  },
+  "allowedSitesDesc": {
+    "message": "Le blocage est désactivé sur les domaines listés ici. Utilisez « Autoriser ici » depuis le popup pour en ajouter."
+  },
+  "noAllowedSites": {
+    "message": "Aucun site autorisé."
+  },
+  "remove": {
+    "message": "Retirer"
+  },
+  "removedFromAllowList": {
+    "message": "$1 retiré de la liste blanche"
+  },
+  "activeLists": {
+    "message": "Listes actives : $1"
+  },
+  "findLists": {
+    "message": "Trouver des listes…"
+  },
+  "catDefault": {
+    "message": "Par défaut"
+  },
+  "catAds": {
+    "message": "Publicités"
+  },
+  "catPrivacy": {
+    "message": "Confidentialité"
+  },
+  "catSecurity": {
+    "message": "Protection contre les logiciels malveillants, sécurité"
+  },
+  "catAnnoyances": {
+    "message": "Nuisances"
+  },
+  "catMisc": {
+    "message": "Divers"
+  },
+  "catRegions": {
+    "message": "Régions, langues"
+  },
+  "customTitle": {
+    "message": "Domaines personnalisés à bloquer"
+  },
+  "customDesc": {
+    "message": "Un domaine par ligne (sous-domaines inclus). Les lignes commençant par # sont ignorées."
+  },
+  "customPlaceholder": {
+    "message": "exemple.com\npub.exemple.org\ntracking.site.net"
+  },
+  "customRuleCount": {
+    "message": "Règles personnalisées : $1"
+  },
+  "cancel": {
+    "message": "Annuler"
+  },
+  "applyChanges": {
+    "message": "Appliquer les modifications"
+  },
+  "aboutDesc": {
+    "message": "Une extension simple et efficace pour bloquer les publicités et protéger votre vie privée en ligne."
+  },
+  "sourceOnGitHub": {
+    "message": "Code source sur GitHub"
+  },
+  "version": {
+    "message": "Version $1"
+  },
+  "toastNetworkOn": {
+    "message": "Blocage réseau activé"
+  },
+  "toastNetworkOff": {
+    "message": "Blocage réseau désactivé"
+  },
+  "toastCleanupOn": {
+    "message": "Nettoyage visuel activé"
+  },
+  "toastCleanupOff": {
+    "message": "Nettoyage visuel désactivé"
+  },
+  "toastListsUpdated": {
+    "message": "Listes de filtres mises à jour"
+  },
+  "toastCustomApplied": {
+    "message": "Filtres personnalisés appliqués : $1"
+  },
+  "toastCustomRejected": {
+    "message": "lignes invalides ignorées : $1 ($2)"
+  },
+  "toastCustomTruncated": {
+    "message": "au-delà de la limite de 5000 : $1"
+  },
+  "toastError": {
+    "message": "Erreur : $1"
+  },
+  "toastRulesNotApplied": {
+    "message": "règles non appliquées"
+  },
+  "toastCancelled": {
+    "message": "Modifications annulées"
+  }
+}

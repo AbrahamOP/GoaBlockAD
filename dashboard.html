@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GoaBlockAD — Configuration</title>
+  <title data-i18n="dashboardTitle">GoaBlockAD</title>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="icon" type="image/png" href="images/icon48.png">
 </head>
@@ -18,23 +18,22 @@
         <h1>GoaBlockAD</h1>
       </div>
       <nav class="tabs">
-        <button class="tab active" data-tab="settings">Paramètres</button>
-        <button class="tab" data-tab="sites">Sites autorisés</button>
-        <button class="tab" data-tab="filter-lists">Listes de filtres</button>
-        <button class="tab" data-tab="custom-filters">Filtres personnalisés</button>
-        <button class="tab" data-tab="about">À propos</button>
+        <button class="tab active" data-tab="settings" data-i18n="settings"></button>
+        <button class="tab" data-tab="sites" data-i18n="tabAllowedSites"></button>
+        <button class="tab" data-tab="filter-lists" data-i18n="tabFilterLists"></button>
+        <button class="tab" data-tab="custom-filters" data-i18n="tabCustomFilters"></button>
+        <button class="tab" data-tab="about" data-i18n="tabAbout"></button>
       </nav>
     </header>
 
     <!-- Tab: Paramètres -->
     <section id="tab-settings" class="tab-content active">
       <div class="section-card">
-        <h2>Protection</h2>
+        <h2 data-i18n="protection"></h2>
         <div class="setting-row">
           <div class="setting-info">
-            <span class="setting-label">Blocage réseau</span>
-            <span class="setting-desc">Bloque les requêtes publicitaires au niveau réseau via les règles
-              declarativeNetRequest.</span>
+            <span class="setting-label" data-i18n="networkBlocking"></span>
+            <span class="setting-desc" data-i18n="networkBlockingDesc"></span>
           </div>
           <label class="switch">
             <input type="checkbox" id="setting-enabled" checked>
@@ -43,9 +42,8 @@
         </div>
         <div class="setting-row">
           <div class="setting-info">
-            <span class="setting-label">Nettoyage cosmétique</span>
-            <span class="setting-desc">Masque les éléments visuels publicitaires restants (bannières, encarts,
-              iframes).</span>
+            <span class="setting-label" data-i18n="visualCleanup"></span>
+            <span class="setting-desc" data-i18n="visualCleanupDesc"></span>
           </div>
           <label class="switch">
             <input type="checkbox" id="setting-cosmetic" checked>
@@ -59,11 +57,10 @@
     <!-- Tab: Sites autorisés -->
     <section id="tab-sites" class="tab-content">
       <div class="section-card">
-        <h2>Sites autorisés</h2>
-        <p class="section-desc">Les domaines listés ici voient leur blocage désactivé (whitelist). Utilise le bouton
-          « Autoriser ici » depuis le popup pour en ajouter.</p>
+        <h2 data-i18n="tabAllowedSites"></h2>
+        <p class="section-desc" data-i18n="allowedSitesDesc"></p>
         <ul class="whitelist" id="whitelist-list">
-          <li class="whitelist-empty">Aucun site autorisé.</li>
+          <li class="whitelist-empty" data-i18n="noAllowedSites"></li>
         </ul>
       </div>
 
@@ -72,15 +69,15 @@
     <!-- Tab: Listes de filtres -->
     <section id="tab-filter-lists" class="tab-content">
       <div class="filter-stats-bar">
-        <span id="filter-rule-count">0 liste(s) active(s)</span>
-        <input type="text" id="filter-search" class="filter-search" placeholder="Trouver des listes...">
+        <span id="filter-rule-count"></span>
+        <input type="text" id="filter-search" class="filter-search" data-i18n-placeholder="findLists">
       </div>
 
       <!-- Par défaut -->
       <div class="filter-category">
         <div class="category-header" data-category="default">
           <span class="category-chevron">▾</span>
-          <strong>Par défaut</strong>
+          <strong data-i18n="catDefault"></strong>
           <span class="category-count" data-count-for="default"></span>
         </div>
         <div class="category-body" id="cat-default">
@@ -99,7 +96,7 @@
       <div class="filter-category">
         <div class="category-header" data-category="ads">
           <span class="category-chevron">▾</span>
-          <strong>Publicités</strong>
+          <strong data-i18n="catAds"></strong>
           <span class="category-count" data-count-for="ads"></span>
         </div>
         <div class="category-body" id="cat-ads">
@@ -112,7 +109,7 @@
       <div class="filter-category">
         <div class="category-header" data-category="privacy">
           <span class="category-chevron">▾</span>
-          <strong>Confidentialité</strong>
+          <strong data-i18n="catPrivacy"></strong>
           <span class="category-count" data-count-for="privacy"></span>
         </div>
         <div class="category-body" id="cat-privacy">
@@ -127,7 +124,7 @@
       <div class="filter-category">
         <div class="category-header" data-category="security">
           <span class="category-chevron">▾</span>
-          <strong>Protection contre les logiciels malveillants, sécurité</strong>
+          <strong data-i18n="catSecurity"></strong>
           <span class="category-count" data-count-for="security"></span>
         </div>
         <div class="category-body" id="cat-security">
@@ -142,7 +139,7 @@
       <div class="filter-category">
         <div class="category-header" data-category="annoyances">
           <span class="category-chevron">▾</span>
-          <strong>Nuisances</strong>
+          <strong data-i18n="catAnnoyances"></strong>
           <span class="category-count" data-count-for="annoyances"></span>
         </div>
         <div class="category-body" id="cat-annoyances">
@@ -167,7 +164,7 @@
       <div class="filter-category">
         <div class="category-header" data-category="misc">
           <span class="category-chevron">▾</span>
-          <strong>Divers</strong>
+          <strong data-i18n="catMisc"></strong>
           <span class="category-count" data-count-for="misc"></span>
         </div>
         <div class="category-body" id="cat-misc">
@@ -186,7 +183,7 @@
       <div class="filter-category">
         <div class="category-header" data-category="regions">
           <span class="category-chevron">▾</span>
-          <strong>Régions, langues</strong>
+          <strong data-i18n="catRegions"></strong>
           <span class="category-count" data-count-for="regions"></span>
         </div>
         <div class="category-body" id="cat-regions">
@@ -271,16 +268,15 @@
     <!-- Tab: Filtres personnalisés -->
     <section id="tab-custom-filters" class="tab-content">
       <div class="section-card">
-        <h2>Domaines personnalisés à bloquer</h2>
-        <p class="section-desc">Ajoutez un domaine par ligne (sous-domaines inclus). Les lignes commençant par # sont
-          ignorées.</p>
+        <h2 data-i18n="customTitle"></h2>
+        <p class="section-desc" data-i18n="customDesc"></p>
         <textarea id="custom-filters-textarea" class="custom-textarea"
-          placeholder="exemple.com&#10;pub.example.org&#10;tracking.site.net" rows="14"></textarea>
+          data-i18n-placeholder="customPlaceholder" rows="14"></textarea>
         <div class="custom-actions">
-          <span class="custom-count" id="custom-count">0 règle(s) personnalisée(s)</span>
+          <span class="custom-count" id="custom-count"></span>
           <div class="custom-buttons">
-            <button class="btn btn-secondary" id="btn-custom-cancel">Annuler</button>
-            <button class="btn btn-primary" id="btn-custom-save">Appliquer les modifications</button>
+            <button class="btn btn-secondary" id="btn-custom-cancel" data-i18n="cancel"></button>
+            <button class="btn btn-primary" id="btn-custom-save" data-i18n="applyChanges"></button>
           </div>
         </div>
       </div>
@@ -291,9 +287,8 @@
       <div class="section-card about-card">
         <img src="images/icon128.png" alt="GoaBlockAD" class="about-logo">
         <h2>GoaBlockAD</h2>
-        <p class="about-version" id="about-version">Version —</p>
-        <p class="about-desc">Une extension simple et efficace pour bloquer les publicités et protéger votre vie privée
-          en ligne.</p>
+        <p class="about-version" id="about-version"></p>
+        <p class="about-desc" data-i18n="aboutDesc"></p>
         <div class="about-divider"></div>
         <div class="about-links">
           <a href="https://github.com/AbrahamOP/GoaBlockAD" target="_blank" class="about-link">
@@ -301,15 +296,16 @@
               <path
                 d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
             </svg>
-            Code source sur GitHub
+            <span data-i18n="sourceOnGitHub"></span>
           </a>
         </div>
         <div class="about-footer">
-          <p>Navigation légère et sans pub.</p>
+          <p data-i18n="tagline"></p>
         </div>
       </div>
     </section>
   </div>
+  <script src="i18n.js"></script>
   <script src="dashboard.js"></script>
 </body>
 
