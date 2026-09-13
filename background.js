@@ -114,6 +114,41 @@ async function rebuildAllowRules(whitelist) {
 }
 
 // ─────────────────────────────────────────────
+// YouTube player data pruning (youtube-inject.js)
+// Runs in the page's world, where it can't read storage: register it only while
+// protection is active, excluding allow-listed domains, so pause/off/allow list
+// apply from the very first script of the page.
+// ─────────────────────────────────────────────
+const YT_INJECT_ID = 'goablockad-youtube-inject';
+let ytSyncQueue = Promise.resolve();
+
+// Serialized: concurrent unregister/register pairs would collide on the script id.
+function syncYouTubeInjection() {
+    ytSyncQueue = ytSyncQueue.then(doSyncYouTubeInjection);
+    return ytSyncQueue;
+}
+
+async function doSyncYouTubeInjection() {
+    const { whitelist = [] } = await chrome.storage.local.get('whitelist');
+    const active = await isProtectionActive();
+    try {
+        await chrome.scripting.unregisterContentScripts({ ids: [YT_INJECT_ID] }).catch(() => {});
+        if (!active) return;
+        await chrome.scripting.registerContentScripts([{
+            id: YT_INJECT_ID,
+            js: ['youtube-inject.js'],
+            matches: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*'],
+            excludeMatches: whitelist.flatMap(d => [`*://${d}/*`, `*://*.${d}/*`]),
+            runAt: 'document_start',
+            world: 'MAIN',
+            allFrames: true
+        }]);
+    } catch (err) {
+        console.error('GoaBlockAD: YouTube script registration failed', err);
+    }
+}
+
+// ─────────────────────────────────────────────
 // Pause mode
 // ─────────────────────────────────────────────
 async function isProtectionActive() {
@@ -135,6 +170,7 @@ async function applyProtectionState() {
     }
     // Custom rules are dynamic and ignore the ruleset toggle: add/remove them too.
     await rebuildCustomRules();
+    await syncYouTubeInjection();
     updateBadgeStyle(shouldEnable);
 }
 
@@ -194,7 +230,10 @@ chrome.runtime.onStartup.addListener(async () => {
 // ─────────────────────────────────────────────
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
     if (namespace !== 'local') return;
-    if (changes.whitelist) await rebuildAllowRules(changes.whitelist.newValue || []);
+    if (changes.whitelist) {
+        await rebuildAllowRules(changes.whitelist.newValue || []);
+        await syncYouTubeInjection();
+    }
     if (changes.enabled || changes.pausedUntil) {
         await applyProtectionState();
         await refreshBadgeText();

@@ -295,5 +295,32 @@
             "urlFilter": "||smartadserver.com^",
             "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
         }
+    },
+    {
+        "id": 34,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||youtube.com/api/stats/ads",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame", "ping", "other"]
+        }
+    },
+    {
+        "id": 35,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||youtube.com/pagead/",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame", "ping", "other"]
+        }
+    },
+    {
+        "id": 36,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "||youtube.com/ptracking",
+            "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame", "ping", "other"]
+        }
     }
 ]
