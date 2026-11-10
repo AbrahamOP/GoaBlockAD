@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // else: use the default checked state from HTML
     });
 
-    updateCategoryCounts();
     updateRuleCount();
 
     // Save on change
@@ -77,8 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             filterCheckboxes.forEach(c => {
                 states[c.dataset.filter] = c.checked;
             });
-            await chrome.storage.local.set({ filterStates: states });
-            updateCategoryCounts();
+            const res = await chrome.runtime.sendMessage({ type: 'saveFilterStates', states });
+            if (!res?.ok) return showToast(t('toastError', res?.error || t('toastRulesNotApplied')));
             updateRuleCount();
             showToast(t('toastListsUpdated'));
         });
@@ -92,23 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             item.classList.toggle('hidden', query && !text.includes(query));
         });
     });
-
-    // Collapsible categories
-    document.querySelectorAll('.category-header').forEach(header => {
-        header.addEventListener('click', () => {
-            header.classList.toggle('collapsed');
-        });
-    });
-
-    function updateCategoryCounts() {
-        const cats = ['default', 'ads', 'privacy', 'security', 'annoyances', 'misc', 'regions'];
-        cats.forEach(cat => {
-            const all = document.querySelectorAll(`input[data-cat="${cat}"]`);
-            const checked = document.querySelectorAll(`input[data-cat="${cat}"]:checked`);
-            const badge = document.querySelector(`[data-count-for="${cat}"]`);
-            if (badge) badge.textContent = `${checked.length}/${all.length}`;
-        });
-    }
 
     function updateRuleCount() {
         const checked = document.querySelectorAll('.filter-item input:checked').length;

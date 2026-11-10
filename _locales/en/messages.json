@@ -111,27 +111,6 @@
   "findLists": {
     "message": "Find lists…"
   },
-  "catDefault": {
-    "message": "Default"
-  },
-  "catAds": {
-    "message": "Ads"
-  },
-  "catPrivacy": {
-    "message": "Privacy"
-  },
-  "catSecurity": {
-    "message": "Malware protection, security"
-  },
-  "catAnnoyances": {
-    "message": "Annoyances"
-  },
-  "catMisc": {
-    "message": "Miscellaneous"
-  },
-  "catRegions": {
-    "message": "Regions, languages"
-  },
   "customTitle": {
     "message": "Custom domains to block"
   },
@@ -191,5 +170,11 @@
   },
   "toastCancelled": {
     "message": "Changes discarded"
+  },
+  "builtinFilters": {
+    "message": "GoaBlockAD — ads and trackers"
+  },
+  "builtinFiltersDesc": {
+    "message": "36 built-in network rules. Custom filters and YouTube player protection are managed separately. No third-party filter lists are included."
   }
 }

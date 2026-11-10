@@ -17,7 +17,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  validate:
+    uses: ./.github/workflows/ci.yml
+
   build-and-release:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,12 +31,17 @@ jobs:
 
       - name: Resolve version
         id: version
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            VERSION=$(node -e "console.log(require('./manifest.json').version)")
-          fi
+          VERSION=$(node -e '
+            const v = process.env.REQUESTED_VERSION || require("./manifest.json").version;
+            if (!/^(0|[1-9]\d*)(\.(0|[1-9]\d*)){0,3}$/.test(v) ||
+                v.split(".").some(n => Number(n) > 65535) || !/[1-9]/.test(v)) {
+              throw new Error("Invalid Chrome version");
+            }
+            console.log(v);
+          ')
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Resolved version: v$VERSION"
 
@@ -59,11 +68,9 @@ jobs:
             fs.writeFileSync('manifest.json', JSON.stringify(m, null, 2) + '\n');
           "
 
-      - name: Validate manifest and rules
+      - name: Validate release contents
         if: steps.check.outputs.skip == 'false'
-        run: |
-          node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8'))"
-          node -e "JSON.parse(require('fs').readFileSync('rules.json','utf8'))"
+        run: bash .github/scripts/validate.sh
 
       - name: Build ZIP
         if: steps.check.outputs.skip == 'false'
@@ -71,18 +78,10 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           ARTIFACT="GoaBlockAD-v${VERSION}.zip"
-          zip -r "$ARTIFACT" . \
-            -x ".git/*" \
-            -x ".github/*" \
-            -x ".gitignore" \
-            -x "_metadata/*" \
-            -x "store-assets/*" \
-            -x "images/icon-source.png" \
-            -x "*.zip" \
-            -x "README.md" \
-            -x "PRIVACY.md" \
-            -x ".gemini/*" \
-            -x "node_modules/*"
+          zip -r "$ARTIFACT" manifest.json LICENSE \
+            background.js content.js content.css youtube.js youtube-inject.js \
+            popup.html popup.js popup.css dashboard.html dashboard.js dashboard.css \
+            i18n.js rules.json _locales images/icon16.png images/icon48.png images/icon128.png
           ls -lh "$ARTIFACT"
           echo "artifact=$ARTIFACT" >> "$GITHUB_OUTPUT"
 

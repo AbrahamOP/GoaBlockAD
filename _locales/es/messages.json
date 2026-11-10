@@ -111,27 +111,6 @@
   "findLists": {
     "message": "Buscar listas…"
   },
-  "catDefault": {
-    "message": "Predeterminadas"
-  },
-  "catAds": {
-    "message": "Anuncios"
-  },
-  "catPrivacy": {
-    "message": "Privacidad"
-  },
-  "catSecurity": {
-    "message": "Protección contra malware, seguridad"
-  },
-  "catAnnoyances": {
-    "message": "Molestias"
-  },
-  "catMisc": {
-    "message": "Varios"
-  },
-  "catRegions": {
-    "message": "Regiones, idiomas"
-  },
   "customTitle": {
     "message": "Dominios personalizados que bloquear"
   },
@@ -191,5 +170,11 @@
   },
   "toastCancelled": {
     "message": "Cambios descartados"
+  },
+  "builtinFilters": {
+    "message": "GoaBlockAD — anuncios y rastreadores"
+  },
+  "builtinFiltersDesc": {
+    "message": "36 reglas de red integradas. Los filtros personalizados y la protección del reproductor de YouTube se gestionan por separado. No se incluyen listas de terceros."
   }
 }

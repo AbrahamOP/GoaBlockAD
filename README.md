@@ -10,9 +10,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3"/>
-  <img src="https://img.shields.io/badge/rules-33+-green?style=flat-square" alt="33+ rules"/>
+  <img src="https://img.shields.io/badge/rules-36-green?style=flat-square" alt="36 rules"/>
   <img src="https://img.shields.io/badge/privacy-100%25_local-purple?style=flat-square" alt="100% local"/>
-  <img src="https://img.shields.io/badge/version-1.3.1-orange?style=flat-square" alt="v1.3.1"/>
+  <img src="https://img.shields.io/badge/version-1.5.0-orange?style=flat-square" alt="v1.5.0"/>
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" alt="MIT"/>
 </p>
 
@@ -32,6 +32,8 @@ GoaBlockAD blocks ads at two levels: **network requests** are killed before they
 - **Cosmetic filtering** — Hides empty ad containers, sticky banners, and overlay placeholders that survive network blocking
 - **Per-page counter** — The badge and popup show how many requests were blocked on the current page
 - **Allow list & pause** — Disable blocking on a site, or everywhere for 15 minutes
+- **Built-in list** — Enable or disable the 36 bundled network rules; no EasyList/uBlock subscriptions are included
+- **YouTube** — Filters player responses and sponsored slots, with an ad-skip fallback on watch pages, Shorts and embeds
 - **Custom filters** — Block extra domains; invalid lines are reported instead of breaking the list
 - **Dashboard** — Manage settings, allowed sites and custom filters
 - **Multilingual** — English, French, Spanish, German, Italian and Brazilian Portuguese, following the browser language
@@ -66,7 +68,7 @@ Download the latest `.zip` from [Releases](https://github.com/AbrahamOP/GoaBlock
 ## How it works
 
 ```
-Browser request → declarativeNetRequest rules (33 patterns)
+Browser request → declarativeNetRequest rules (36 patterns)
                     ↓ blocked → never loads
                     ↓ allowed → page renders
                                   ↓
@@ -95,15 +97,40 @@ Releases are automated. Push a version bump in `manifest.json` to `main`:
 
 ```jsonc
 // manifest.json
-"version": "1.4.0"  // bump this
+"version": "1.5.0"  // bump this
 ```
 
 The CI will:
-1. Validate JSON and JS syntax
-2. Build `GoaBlockAD-v1.4.0.zip` (excluding `.git`, `.github`, `_metadata`)
+1. Pass the shared validation suite and Chromium integration tests (JSON, JS syntax, translations, manifest references, regression tests and browser behavior)
+2. Build `GoaBlockAD-v1.5.0.zip` (excluding `.git`, `.github`, `_metadata`)
 3. Create a Git tag + GitHub release with auto-generated notes and the ZIP attached
 
 Manual trigger is also available via **Actions → Release → Run workflow**.
+
+## YouTube
+
+Reload existing YouTube tabs after installing or updating the extension. Protection follows
+pause, the global switch and allowed sites, including on subsequent in-page navigations.
+The cosmetic switch only controls sponsored slots; player protection stays active.
+The extension does not block `googlevideo.com`, which also serves ordinary videos.
+
+YouTube changes its player and ad delivery regularly. Client-side ad removal is best-effort;
+server-inserted ads and new player variants may not be removable. If playback fails, allow
+YouTube in the popup and reload the tab.
+
+## Development checks
+
+Run `bash .github/scripts/validate.sh` (Node.js 22 or later).
+Browser integration tests use an unpacked extension in a disposable Chromium profile:
+
+```bash
+npm install --prefix /tmp/goablockad-browser playwright@1.65.0
+NODE_PATH=/tmp/goablockad-browser/node_modules node tests/browser.cjs
+```
+
+Set `CHROMIUM_PATH` if Chromium is not installed at `/usr/bin/chromium`.
+The browser suite uses deterministic YouTube-shaped fixtures; it does not prove ad removal
+for every live YouTube session.
 
 ## Privacy
 

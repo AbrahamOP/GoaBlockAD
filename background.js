@@ -4,7 +4,7 @@ const DYNAMIC_CUSTOM_START = 10000;
 const DYNAMIC_ALLOW_START = 20000;
 const PAUSE_ALARM = 'goablockad-pause-resume';
 const BADGE_COLOR = '#00bcd4';
-// Chrome caps "unsafe" dynamic rules (block, redirect…) at 5000.
+// Product limit, kept below Chrome’s dynamic rule quota.
 const MAX_CUSTOM_RULES = 5000;
 
 // ─────────────────────────────────────────────
@@ -124,28 +124,27 @@ let ytSyncQueue = Promise.resolve();
 
 // Serialized: concurrent unregister/register pairs would collide on the script id.
 function syncYouTubeInjection() {
-    ytSyncQueue = ytSyncQueue.then(doSyncYouTubeInjection);
+    ytSyncQueue = ytSyncQueue.catch(() => {}).then(doSyncYouTubeInjection);
     return ytSyncQueue;
 }
 
 async function doSyncYouTubeInjection() {
     const { whitelist = [] } = await chrome.storage.local.get('whitelist');
     const active = await isProtectionActive();
-    try {
-        await chrome.scripting.unregisterContentScripts({ ids: [YT_INJECT_ID] }).catch(() => {});
-        if (!active) return;
-        await chrome.scripting.registerContentScripts([{
-            id: YT_INJECT_ID,
-            js: ['youtube-inject.js'],
-            matches: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*'],
-            excludeMatches: whitelist.flatMap(d => [`*://${d}/*`, `*://*.${d}/*`]),
-            runAt: 'document_start',
-            world: 'MAIN',
-            allFrames: true
-        }]);
-    } catch (err) {
-        console.error('GoaBlockAD: YouTube script registration failed', err);
+    const registered = await chrome.scripting.getRegisteredContentScripts({ ids: [YT_INJECT_ID] });
+    if (!active) {
+        if (registered.length) await chrome.scripting.unregisterContentScripts({ ids: [YT_INJECT_ID] });
+        return;
     }
+    const script = {
+        id: YT_INJECT_ID,
+        js: ['youtube-inject.js'],
+        matches: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*'],
+        excludeMatches: whitelist.flatMap(d => [`*://${d}/*`, `*://*.${d}/*`]),
+        runAt: 'document_start', world: 'MAIN', allFrames: true
+    };
+    if (registered.length) await chrome.scripting.updateContentScripts([script]);
+    else await chrome.scripting.registerContentScripts([script]);
 }
 
 // ─────────────────────────────────────────────
@@ -158,18 +157,16 @@ async function isProtectionActive() {
 
 async function applyProtectionState() {
     const shouldEnable = await isProtectionActive();
+    const { filterStates = {} } = await chrome.storage.local.get('filterStates');
 
-    try {
-        if (shouldEnable) {
-            await chrome.declarativeNetRequest.updateEnabledRulesets({ enableRulesetIds: ['ruleset_1'] });
-        } else {
-            await chrome.declarativeNetRequest.updateEnabledRulesets({ disableRulesetIds: ['ruleset_1'] });
-        }
-    } catch (err) {
-        console.warn('GoaBlockAD: ruleset toggle warning', err.message);
+    if (shouldEnable && filterStates['builtin-network'] !== false) {
+        await chrome.declarativeNetRequest.updateEnabledRulesets({ enableRulesetIds: ['ruleset_1'] });
+    } else {
+        await chrome.declarativeNetRequest.updateEnabledRulesets({ disableRulesetIds: ['ruleset_1'] });
     }
     // Custom rules are dynamic and ignore the ruleset toggle: add/remove them too.
-    await rebuildCustomRules();
+    const custom = await rebuildCustomRules();
+    if (!custom.ok) throw new Error(custom.error);
     await syncYouTubeInjection();
     updateBadgeStyle(shouldEnable);
 }
@@ -190,101 +187,125 @@ async function refreshBadgeText() {
     chrome.action.setBadgeText({ text: !enabled ? 'OFF' : isPaused ? '⏸' : '' });
 }
 
-// ─────────────────────────────────────────────
-// Lifecycle
-// ─────────────────────────────────────────────
-chrome.runtime.onInstalled.addListener(async () => {
-    const result = await chrome.storage.local.get([
-        'enabled', 'cosmetic', 'filterStates', 'customFilters', 'whitelist', 'pausedUntil'
-    ]);
-    const defaults = {};
-    if (result.enabled === undefined) defaults.enabled = true;
-    if (result.cosmetic === undefined) defaults.cosmetic = true;
-    if (result.filterStates === undefined) defaults.filterStates = {};
-    if (result.customFilters === undefined) defaults.customFilters = '';
-    if (result.whitelist === undefined) defaults.whitelist = [];
-    if (result.pausedUntil === undefined) defaults.pausedUntil = 0;
-    if (Object.keys(defaults).length > 0) {
-        await chrome.storage.local.set(defaults);
+// Serialize state changes so rapid toggles cannot leave stale rules installed.
+let stateQueue = Promise.resolve();
+function enqueue(task) {
+    const result = stateQueue.then(task);
+    stateQueue = result.catch(err => console.error('GoaBlockAD:', err));
+    return result;
+}
+
+async function reconcilePause() {
+    const { pausedUntil = 0 } = await chrome.storage.local.get('pausedUntil');
+    if (pausedUntil > Date.now()) {
+        const alarm = await chrome.alarms.get(PAUSE_ALARM);
+        if (!alarm || alarm.scheduledTime !== pausedUntil) {
+            await chrome.alarms.create(PAUSE_ALARM, { when: pausedUntil });
+        }
+    } else {
+        await chrome.alarms.clear(PAUSE_ALARM);
+        if (pausedUntil) await chrome.storage.local.set({ pausedUntil: 0 });
     }
-    // Leftovers of the old counter (≤ 1.3.x), which only ever counted cosmetic hides.
+}
+
+async function synchronize() {
+    await reconcilePause();
+    const { whitelist = [] } = await chrome.storage.local.get('whitelist');
+    const allowed = await rebuildAllowRules(whitelist);
+    if (!allowed.ok) throw new Error(allowed.error);
+    await applyProtectionState();
+    await refreshBadgeText();
+}
+
+function allowedHost(host, whitelist) {
+    return whitelist.some(d => host === d || host.endsWith('.' + d));
+}
+
+// The isolated YouTube script requests this on load and on setting changes.
+// Target the exact document: a tab/frame may have navigated while awaiting storage.
+async function syncYouTubeDocument(sender) {
+    const url = new URL(sender.url);
+    if (!sender.tab || !sender.documentId || !/^https?:$/.test(url.protocol) ||
+        !/(^|\.)youtube(?:-nocookie)?\.com$/.test(url.hostname)) {
+        throw new Error('Not a YouTube document');
+    }
+    const { whitelist = [] } = await chrome.storage.local.get('whitelist');
+    const topHost = new URL(sender.tab.url || sender.url).hostname;
+    const active = await isProtectionActive() &&
+        !allowedHost(url.hostname, whitelist) && !allowedHost(topHost, whitelist);
+    const target = { tabId: sender.tab.id, documentIds: [sender.documentId] };
+    if (active) await chrome.scripting.executeScript({ target, world: 'MAIN', files: ['youtube-inject.js'] });
+    await chrome.scripting.executeScript({
+        target, world: 'MAIN',
+        func: enabled => window.__goablockadYt?.setEnabled(enabled),
+        args: [active]
+    });
+    return { ok: true, active };
+}
+
+chrome.runtime.onInstalled.addListener(() => enqueue(async () => {
+    const result = await chrome.storage.local.get(null);
+    const defaults = { enabled: true, cosmetic: true, filterStates: {}, customFilters: '', whitelist: [], pausedUntil: 0 };
+    for (const key of Object.keys(defaults)) if (result[key] !== undefined) delete defaults[key];
+    if (Object.keys(defaults).length) await chrome.storage.local.set(defaults);
     await chrome.storage.local.remove(['count', 'domainStats']);
     await chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: true });
-    await rebuildAllowRules(result.whitelist || []);
-    await applyProtectionState();
-    await refreshBadgeText();
-});
+    await synchronize();
+}));
 
-chrome.runtime.onStartup.addListener(async () => {
-    // Ensure a stale pause from a previous session is cleared
-    const { pausedUntil = 0 } = await chrome.storage.local.get('pausedUntil');
-    if (pausedUntil && Date.now() >= pausedUntil) {
-        await chrome.storage.local.set({ pausedUntil: 0 });
-    }
-    await applyProtectionState();
-    await refreshBadgeText();
-});
-
-// ─────────────────────────────────────────────
-// Storage-driven effects
-// ─────────────────────────────────────────────
-chrome.storage.onChanged.addListener(async (changes, namespace) => {
-    if (namespace !== 'local') return;
-    if (changes.whitelist) {
-        await rebuildAllowRules(changes.whitelist.newValue || []);
-        await syncYouTubeInjection();
-    }
-    if (changes.enabled || changes.pausedUntil) {
-        await applyProtectionState();
-        await refreshBadgeText();
+chrome.runtime.onStartup.addListener(() => enqueue(synchronize));
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'local' && ['whitelist', 'enabled', 'pausedUntil', 'filterStates', 'customFilters'].some(k => changes[k])) {
+        return enqueue(synchronize);
     }
 });
-
-// ─────────────────────────────────────────────
-// Alarms (auto-resume from pause)
-// ─────────────────────────────────────────────
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-    if (alarm.name === PAUSE_ALARM) {
-        await chrome.storage.local.set({ pausedUntil: 0 });
-    }
+chrome.alarms.onAlarm.addListener(alarm => {
+    // Re-read the deadline: an old alarm may arrive after a new pause was requested.
+    if (alarm.name === PAUSE_ALARM) return enqueue(synchronize);
 });
 
-// ─────────────────────────────────────────────
-// Message API (popup / dashboard)
-// ─────────────────────────────────────────────
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    (async () => {
-        if (!msg || !msg.type) return sendResponse({ ok: false });
-        switch (msg.type) {
+    enqueue(async () => {
+        switch (msg?.type) {
+            case 'youtubeState':
+                return syncYouTubeDocument(sender);
             case 'pauseProtection': {
-                const minutes = Math.max(1, Number(msg.minutes) || 15);
+                const value = Number(msg.minutes);
+                const minutes = Number.isFinite(value) ? Math.min(1440, Math.max(1, value || 15)) : 15;
                 const until = Date.now() + minutes * 60 * 1000;
                 await chrome.storage.local.set({ pausedUntil: until });
-                await chrome.alarms.create(PAUSE_ALARM, { when: until });
-                return sendResponse({ ok: true, pausedUntil: until });
+                await synchronize();
+                return { ok: true, pausedUntil: until };
             }
-            case 'resumeProtection': {
-                await chrome.alarms.clear(PAUSE_ALARM);
+            case 'resumeProtection':
                 await chrome.storage.local.set({ pausedUntil: 0 });
-                return sendResponse({ ok: true });
-            }
+                await synchronize();
+                return { ok: true };
             case 'toggleWhitelist': {
-                const domain = msg.domain;
-                if (!domain) return sendResponse({ ok: false, error: 'no domain' });
+                const domain = String(msg.domain || '').toLowerCase().replace(/^www\./, '');
+                if (!/^[a-z0-9_-]+(?:\.[a-z0-9_-]+)*$/.test(domain)) throw new Error('Invalid domain');
                 const { whitelist = [] } = await chrome.storage.local.get('whitelist');
-                const idx = whitelist.indexOf(domain);
-                const next = [...whitelist];
-                if (idx >= 0) next.splice(idx, 1); else next.push(domain);
+                // Removing an inherited exception must remove the parent entry too.
+                const whitelisted = allowedHost(domain, whitelist);
+                const next = whitelisted ? whitelist.filter(d => !(domain === d || domain.endsWith('.' + d))) : [...whitelist, domain];
                 await chrome.storage.local.set({ whitelist: next });
-                return sendResponse({ ok: true, whitelisted: idx < 0, whitelist: next });
+                await synchronize();
+                return { ok: true, whitelisted: !whitelisted, whitelist: next };
             }
-            case 'saveCustomFilters': {
+            case 'saveFilterStates':
+                await chrome.storage.local.set({ filterStates: { 'builtin-network': msg.states?.['builtin-network'] !== false } });
+                await synchronize();
+                return { ok: true };
+            case 'saveCustomFilters':
                 await chrome.storage.local.set({ customFilters: String(msg.raw || '') });
-                return sendResponse(await rebuildCustomRules());
-            }
+                return rebuildCustomRules();
             default:
-                return sendResponse({ ok: false, error: 'unknown message' });
+                return { ok: false, error: 'unknown message' };
         }
-    })();
+    }).then(sendResponse, err => sendResponse({ ok: false, error: err.message }));
     return true;
 });
+
+// Alarms can disappear on extension updates or browser restarts. Also reconcile
+// on a service-worker wake, not only on the browser's onStartup event.
+enqueue(synchronize);
