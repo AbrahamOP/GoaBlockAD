@@ -1,100 +1,130 @@
-// GoaBlockAD - YouTube player data pruning
-// Runs in the page (MAIN world) at document_start, so it sees the player data
-// before the player does: ad fields are removed from the initial player response
-// embedded in the page and from the youtubei API responses fetched on SPA
-// navigation. The player then never schedules an ad.
-// Registered dynamically by background.js only while protection is active and
-// YouTube isn't allow-listed — this script has no access to extension storage.
-// Based on the approach proposed by @PoPoGH in #10.
-
+// Runs in YouTube's MAIN world before page scripts. No remote code or requests.
 (() => {
     if (window.__goablockadYt) return;
-    window.__goablockadYt = true;
+    let enabled = true;
+    window.__goablockadYt = { setEnabled(value) { enabled = value === true; } };
 
     const AD_KEYS = new Set(['playerAds', 'adPlacements', 'adSlots', 'adBreakHeartbeatParams']);
-    const API_PATHS = ['/youtubei/v1/player', '/youtubei/v1/next', '/youtubei/v1/reel/reel_watch_sequence'];
+    const AD_RENDERERS = new Set(['adSlotRenderer', 'displayAdRenderer', 'inFeedAdLayoutRenderer',
+        'promotedSparklesWebRenderer', 'promotedSparklesTextSearchRenderer', 'promotedVideoRenderer']);
+    const API_PATHS = new Set(['/youtubei/v1/player', '/youtubei/v1/next', '/youtubei/v1/browse',
+        '/youtubei/v1/reel/reel_watch_sequence']);
+
+    function isAdItem(item) {
+        if (!item || typeof item !== 'object') return false;
+        return Object.keys(item).some(k => AD_RENDERERS.has(k)) ||
+            !!(item.richItemRenderer && isAdItem(item.richItemRenderer.content));
+    }
 
     function prune(obj) {
-        if (!obj || typeof obj !== 'object') return obj;
-        for (const key of Object.keys(obj)) {
-            if (AD_KEYS.has(key)) delete obj[key];
-            else prune(obj[key]);
+        if (!enabled || !obj || typeof obj !== 'object') return obj;
+        // Page-assigned objects can contain cycles; JSON API payloads cannot.
+        const seen = new WeakSet();
+        const pending = [obj];
+        while (pending.length) {
+            const value = pending.pop();
+            if (!value || typeof value !== 'object' || seen.has(value)) continue;
+            seen.add(value);
+            if (Array.isArray(value)) {
+                for (let i = value.length - 1; i >= 0; i--) if (isAdItem(value[i])) value.splice(i, 1);
+            }
+            for (const key of Object.keys(value)) {
+                if (AD_KEYS.has(key) || AD_RENDERERS.has(key)) delete value[key];
+                else if (value[key] && typeof value[key] === 'object') pending.push(value[key]);
+            }
         }
         return obj;
     }
 
     function pruneText(text) {
-        try {
-            return JSON.stringify(prune(JSON.parse(text)));
-        } catch (_) {
-            return text;
-        }
+        if (!enabled || typeof text !== 'string') return text;
+        try { return JSON.stringify(prune(JSON.parse(text))); }
+        catch (_) { return text; }
     }
 
-    function isApiUrl(url) {
+    function isApiUrl(input) {
         try {
-            const { pathname } = new URL(String(url), location.href);
-            return API_PATHS.some(p => pathname.startsWith(p));
-        } catch (_) {
-            return false;
-        }
+            const url = new URL(String(input), location.href);
+            return url.origin === location.origin && API_PATHS.has(url.pathname.replace(/\/$/, ''));
+        } catch (_) { return false; }
     }
 
-    // ── Data embedded in the page (first load of /watch, /shorts) ──
-    // YouTube assigns `var ytInitialPlayerResponse = {...}` in an inline script;
-    // an accessor on window catches that assignment.
-    let initialPlayerResponse;
-    Object.defineProperty(window, 'ytInitialPlayerResponse', {
-        configurable: true,
-        get: () => initialPlayerResponse,
-        set: (value) => { initialPlayerResponse = prune(value); }
-    });
+    // Preserve an existing response when enabling on an already open page.
+    for (const name of ['ytInitialPlayerResponse', 'ytInitialData']) {
+        const descriptor = Object.getOwnPropertyDescriptor(window, name);
+        if (descriptor && (!descriptor.configurable || descriptor.get || descriptor.set)) continue;
+        let value = prune(window[name]);
+        Object.defineProperty(window, name, {
+            configurable: true, enumerable: descriptor?.enumerable ?? true,
+            get: () => value,
+            set: next => { value = prune(next); }
+        });
+    }
 
-    // ── fetch ──
     const origFetch = window.fetch;
-    window.fetch = function (input, init) {
+    window.fetch = function (input) {
         const promise = origFetch.apply(this, arguments);
         const url = input instanceof Request ? input.url : input;
-        if (!isApiUrl(url)) return promise;
-        return promise.then(response => {
-            if (!response.ok) return response;
-            return response.clone().text().then(text => {
-                const pruned = new Response(pruneText(text), {
-                    status: response.status,
-                    statusText: response.statusText,
-                    headers: response.headers
+        if (!enabled || !isApiUrl(url)) return promise;
+        return promise.then(async response => {
+            // Null-body responses (204/205) cannot be rebuilt with a string body.
+            if (!enabled || !response.ok || !response.body) return response;
+            const type = response.headers.get('content-type');
+            if (type && !/json/i.test(type)) return response;
+            try {
+                const text = await response.clone().text();
+                if (!enabled) return response;
+                const headers = new Headers(response.headers);
+                headers.delete('content-length');
+                headers.delete('content-encoding');
+                const result = new Response(pruneText(text), {
+                    status: response.status, statusText: response.statusText, headers
                 });
-                Object.defineProperty(pruned, 'url', { value: response.url });
-                return pruned;
-            }, () => response);
+                // Preserve fetch metadata, including on clones used by the player.
+                function decorate(copy) {
+                    for (const key of ['url', 'type', 'redirected']) {
+                        Object.defineProperty(copy, key, { value: response[key] });
+                    }
+                    const clone = copy.clone.bind(copy);
+                    copy.clone = () => decorate(clone());
+                    return copy;
+                }
+                return decorate(result);
+            } catch (_) { return response; }
         });
     };
 
-    // ── XMLHttpRequest ──
-    const xhrProto = XMLHttpRequest.prototype;
-    const origOpen = xhrProto.open;
-    const responseText = Object.getOwnPropertyDescriptor(xhrProto, 'responseText').get;
-    const response = Object.getOwnPropertyDescriptor(xhrProto, 'response').get;
-
-    xhrProto.open = function (method, url) {
+    const proto = XMLHttpRequest.prototype;
+    const origOpen = proto.open;
+    const getText = Object.getOwnPropertyDescriptor(proto, 'responseText').get;
+    const getResponse = Object.getOwnPropertyDescriptor(proto, 'response').get;
+    const hooked = new WeakSet();
+    proto.open = function (method, url) {
+        // An XHR can be reused for a different URL. Remove only our own hooks.
+        if (hooked.has(this)) {
+            delete this.responseText;
+            delete this.response;
+            hooked.delete(this);
+        }
         if (isApiUrl(url)) {
-            let raw, pruned;
-            const cached = (value) => {
-                if (value !== raw) { raw = value; pruned = pruneText(value); }
-                return pruned;
+            let raw, cached;
+            const transform = value => {
+                if (!enabled) return value;
+                if (value !== raw) { raw = value; cached = pruneText(value); }
+                return cached;
             };
             Object.defineProperty(this, 'responseText', {
-                configurable: true,
-                get() { return cached(responseText.call(this)); }
+                configurable: true, get() { return transform(getText.call(this)); }
             });
             Object.defineProperty(this, 'response', {
-                configurable: true,
-                get() {
-                    const value = response.call(this);
-                    if (typeof value === 'string') return cached(value);
+                configurable: true, get() {
+                    const value = getResponse.call(this);
+                    if (!enabled) return value;
+                    if (typeof value === 'string') return transform(value);
                     return this.responseType === 'json' ? prune(value) : value;
                 }
             });
+            hooked.add(this);
         }
         return origOpen.apply(this, arguments);
     };

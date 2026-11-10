@@ -111,27 +111,6 @@
   "findLists": {
     "message": "Listen suchen…"
   },
-  "catDefault": {
-    "message": "Standard"
-  },
-  "catAds": {
-    "message": "Werbung"
-  },
-  "catPrivacy": {
-    "message": "Datenschutz"
-  },
-  "catSecurity": {
-    "message": "Schutz vor Schadsoftware, Sicherheit"
-  },
-  "catAnnoyances": {
-    "message": "Störelemente"
-  },
-  "catMisc": {
-    "message": "Sonstiges"
-  },
-  "catRegions": {
-    "message": "Regionen, Sprachen"
-  },
   "customTitle": {
     "message": "Eigene Domains zum Blockieren"
   },
@@ -191,5 +170,11 @@
   },
   "toastCancelled": {
     "message": "Änderungen verworfen"
+  },
+  "builtinFilters": {
+    "message": "GoaBlockAD — Werbung und Tracker"
+  },
+  "builtinFiltersDesc": {
+    "message": "36 integrierte Netzwerkregeln. Eigene Filter und der YouTube-Player-Schutz werden separat verwaltet. Keine Filterlisten von Drittanbietern enthalten."
   }
 }

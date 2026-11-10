@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnWhitelist.textContent = t('unavailable');
             return;
         }
-        const allowed = list.includes(domain);
+        const allowed = list.some(d => domain === d || domain.endsWith('.' + d));
         btnWhitelist.textContent = allowed ? t('allowedHere') : t('allowHere');
         btnWhitelist.classList.toggle('active', allowed);
     }
@@ -125,7 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function extractDomain(url) {
         try {
-            const host = new URL(url).hostname;
+            const parsed = new URL(url);
+            if (!/^https?:$/.test(parsed.protocol)) return null;
+            const host = parsed.hostname;
             return host.replace(/^www\./, '');
         } catch (_) {
             return null;
